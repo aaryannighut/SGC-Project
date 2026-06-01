@@ -1,0 +1,132 @@
+/* public/css/style.css */
+
+/* Global Reset & Typography */
+body {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #212529;
+    min-height: 100vh;
+}
+
+/* Page Background */
+.bg-light-modern {
+    background: radial-gradient(circle at 50% 50%, rgba(248, 249, 250, 1) 0%, rgba(233, 236, 239, 1) 100%);
+}
+
+/* Custom Navigation Styling */
+.bg-gradient-nav {
+    background: linear-gradient(135deg, #141e30 0%, #243b55 100%);
+}
+
+.brand-icon {
+    font-size: 1.5rem;
+}
+
+.tracking-tight {
+    letter-spacing: -0.02em;
+}
+
+/* Navbar Buttons */
+.nav-btn-outline {
+    border: 1.5px solid rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.85) !important;
+    transition: all 0.25s ease;
+    font-weight: 500;
+}
+
+.nav-btn-outline:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: #ffffff;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+}
+
+.nav-btn-primary {
+    background-color: #0d6efd;
+    color: #ffffff !important;
+    transition: all 0.25s ease;
+    font-weight: 500;
+    box-shadow: 0 4px 6px rgba(13, 110, 253, 0.15);
+}
+
+.nav-btn-primary:hover {
+    background-color: #0b5ed7;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px rgba(13, 110, 253, 0.25);
+}
+
+/* Glassmorphism Hero Card */
+.bg-white-glass {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.hero-card {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+.hero-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Typography Enhancements */
+.fw-extrabold {
+    font-weight: 800;
+}
+
+.text-gradient-purple-blue {
+    background: linear-gradient(135deg, #1f4068 0%, #162447 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Custom Buttons & Transitions */
+.btn-gradient-blue {
+    background: linear-gradient(135deg, #1f4068 0%, #162447 100%);
+    border: none;
+    color: white;
+}
+
+.btn-gradient-blue:hover {
+    background: linear-gradient(135deg, #162447 0%, #1f4068 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(22, 36, 71, 0.25) !important;
+}
+
+.btn-outline-primary {
+    border: 2px solid #1f4068;
+    color: #1f4068;
+}
+
+.btn-outline-primary:hover {
+    background-color: #1f4068;
+    border-color: #1f4068;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(31, 64, 104, 0.15) !important;
+}
+
+.transition-all {
+    transition: all 0.25s ease-in-out;
+}
+
+.tracking-wide {
+    letter-spacing: 0.05em;
+}
+
+/* Micro-features card styles */
+.row.mt-5 .card {
+    transition: transform 0.25s ease;
+}
+
+.row.mt-5 .card:hover {
+    transform: translateX(4px);
+}
+
+/* Footer styling tweaks */
+.footer {
+    font-weight: 300;
+}
