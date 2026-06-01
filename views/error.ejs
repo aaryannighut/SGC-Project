@@ -1,0 +1,20 @@
+<% layout('includes/boilerplate') -%>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6 text-center">
+            <div class="card border-0 rounded-4 shadow-lg bg-white-glass p-5 hero-card">
+                <div class="display-1 text-danger mb-4">🚨</div>
+                <h1 class="display-4 fw-extrabold text-gradient-purple-blue mb-3">
+                    Error <%= typeof statusCode !== 'undefined' ? statusCode : 500 %>
+                </h1>
+                <p class="fs-5 text-muted mb-4">
+                    <%= typeof message !== 'undefined' ? message : 'Something went wrong. Please try again.' %>
+                </p>
+                <a href="/" class="btn btn-primary px-5 py-3 rounded-pill fw-bold btn-gradient-blue shadow transition-all text-uppercase tracking-wide">
+                    🔙 Return Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

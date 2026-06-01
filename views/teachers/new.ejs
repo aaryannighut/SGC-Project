@@ -1,0 +1,72 @@
+<% layout('includes/boilerplate') -%>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <a href="/teachers" class="btn btn-link text-decoration-none text-muted mb-4 p-0 fw-semibold d-inline-flex align-items-center gap-1">
+                <span>⬅️</span> Back to Directory
+            </a>
+            
+            <div class="card border-0 rounded-4 shadow-lg bg-white-glass p-4 p-md-5">
+                <h2 class="fw-bold text-gradient-purple-blue mb-4 text-center">Add New Teacher</h2>
+                
+                <form action="/teachers" method="POST" class="needs-validation" novalidate>
+                    <!-- Name -->
+                    <div class="mb-3">
+                        <label for="name" class="form-label fw-semibold">Teacher Name</label>
+                        <input type="text" class="form-control rounded-3" id="name" name="teacher[name]" placeholder="e.g. Minerva McGonagall" required>
+                        <div class="invalid-feedback">Please enter the teacher's name.</div>
+                    </div>
+                    
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label fw-semibold">Email Address</label>
+                        <input type="email" class="form-control rounded-3" id="email" name="teacher[email]" placeholder="e.g. minerva@hogwarts.edu" required>
+                        <div class="invalid-feedback">Please enter a valid email address.</div>
+                    </div>
+                    
+                    <!-- Mobile -->
+                    <div class="mb-3">
+                        <label for="mobile" class="form-label fw-semibold">Mobile Number</label>
+                        <input type="tel" class="form-control rounded-3" id="mobile" name="teacher[mobile]" placeholder="e.g. 9876543210" pattern="[0-9]{10}" required>
+                        <div class="invalid-feedback">Please enter a valid 10-digit mobile number.</div>
+                    </div>
+                    
+                    <!-- Assigned Class -->
+                    <div class="mb-4">
+                        <label for="assignedClass" class="form-label fw-semibold">Assigned Class (Optional)</label>
+                        <select class="form-select rounded-3" id="assignedClass" name="teacher[assignedClass]">
+                            <option value="">No Class Assigned</option>
+                            <% for (let classObj of classes) { %>
+                                <option value="<%= classObj._id %>"><%= classObj.className %></option>
+                            <% } %>
+                        </select>
+                        <div class="form-text text-muted small">You can link this teacher to an existing class.</div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold w-100 btn-gradient-blue shadow transition-all py-3 border-0">
+                        💾 Register Teacher
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Bootstrap validation script
+    (() => {
+      'use strict'
+      const forms = document.querySelectorAll('.needs-validation')
+      Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+          form.classList.add('was-validated')
+        }, false)
+      })
+    })()
+</script>

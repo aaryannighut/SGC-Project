@@ -1,0 +1,84 @@
+<% layout('includes/boilerplate') -%>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <a href="/students" class="btn btn-link text-decoration-none text-muted mb-4 p-0 fw-semibold d-inline-flex align-items-center gap-1">
+                <span>⬅️</span> Back to Registry
+            </a>
+            
+            <div class="card border-0 rounded-4 shadow-lg bg-white-glass p-4 p-md-5">
+                <h2 class="fw-bold text-gradient-purple-blue mb-4 text-center">Add New Student</h2>
+                
+                <form action="/students" method="POST" class="needs-validation" novalidate>
+                    <!-- Student Name -->
+                    <div class="mb-3">
+                        <label for="name" class="form-label fw-semibold">Student Name</label>
+                        <input type="text" class="form-control rounded-3" id="name" name="student[name]" placeholder="e.g. John Doe" required>
+                        <div class="invalid-feedback">Please enter the student's name.</div>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- Roll No -->
+                        <div class="col-md-6 mb-3">
+                            <label for="rollNo" class="form-label fw-semibold">Roll Number</label>
+                            <input type="text" class="form-control rounded-3" id="rollNo" name="student[rollNo]" placeholder="e.g. S-101" required>
+                            <div class="invalid-feedback">Please enter a roll number.</div>
+                        </div>
+                        
+                        <!-- Class Select -->
+                        <div class="col-md-6 mb-3">
+                            <label for="className" class="form-label fw-semibold">Class</label>
+                            <select class="form-select rounded-3" id="className" name="student[className]" required>
+                                <option value="" disabled selected>Choose class...</option>
+                                <option value="5th">5th</option>
+                                <option value="6th">6th</option>
+                                <option value="7th">7th</option>
+                                <option value="8th">8th</option>
+                                <option value="9th">9th</option>
+                                <option value="10th">10th</option>
+                            </select>
+                            <div class="invalid-feedback">Please select a class.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Parent Name -->
+                    <div class="mb-3">
+                        <label for="parentName" class="form-label fw-semibold">Parent / Guardian Name</label>
+                        <input type="text" class="form-control rounded-3" id="parentName" name="student[parentName]" placeholder="e.g. Richard Doe" required>
+                        <div class="invalid-feedback">Please enter parent/guardian's name.</div>
+                    </div>
+                    
+                    <!-- Parent Mobile -->
+                    <div class="mb-4">
+                        <label for="parentMobile" class="form-label fw-semibold">Parent Mobile Number</label>
+                        <input type="tel" class="form-control rounded-3" id="parentMobile" name="student[parentMobile]" placeholder="e.g. 9876543210" pattern="[0-9]{10}" required>
+                        <div class="invalid-feedback">Please enter a valid 10-digit mobile number.</div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold w-100 btn-gradient-blue shadow transition-all py-3 border-0">
+                        💾 Register Student
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Bootstrap validation script
+    (() => {
+      'use strict'
+      const forms = document.querySelectorAll('.needs-validation')
+      Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+          form.classList.add('was-validated')
+        }, false)
+      })
+    })()
+</script>
