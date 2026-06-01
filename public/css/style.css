@@ -1,6 +1,17 @@
 /* public/css/style.css */
 
 /* Global Reset & Typography */
+:root {
+    --bs-primary: #d99100; /* Warm dark gold / yellow */
+    --bs-primary-rgb: 217, 145, 0;
+    --bs-primary-bg-subtle: #fffdf0;
+    --bs-primary-border-subtle: #ffe699;
+    --bs-primary-text-emphasis: #734d00;
+    
+    --bs-link-color: #d99100;
+    --bs-link-hover-color: #a66f00;
+}
+
 body {
     font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: #212529;
@@ -9,12 +20,12 @@ body {
 
 /* Page Background */
 .bg-light-modern {
-    background: radial-gradient(circle at 50% 50%, rgba(248, 249, 250, 1) 0%, rgba(233, 236, 239, 1) 100%);
+    background: radial-gradient(circle at 50% 50%, #fffdf6 0%, #f7f2e4 100%);
 }
 
 /* Custom Navigation Styling */
 .bg-gradient-nav {
-    background: linear-gradient(135deg, #141e30 0%, #243b55 100%);
+    background: linear-gradient(135deg, #12120f 0%, #292419 100%);
 }
 
 .brand-icon {
@@ -41,18 +52,18 @@ body {
 }
 
 .nav-btn-primary {
-    background-color: #0d6efd;
-    color: #ffffff !important;
+    background-color: #d99100;
+    color: #111111 !important;
     transition: all 0.25s ease;
-    font-weight: 500;
-    box-shadow: 0 4px 6px rgba(13, 110, 253, 0.15);
+    font-weight: 600;
+    box-shadow: 0 4px 6px rgba(217, 145, 0, 0.2);
 }
 
 .nav-btn-primary:hover {
-    background-color: #0b5ed7;
-    color: #ffffff !important;
+    background-color: #f0a300;
+    color: #111111 !important;
     transform: translateY(-1px);
-    box-shadow: 0 6px 12px rgba(13, 110, 253, 0.25);
+    box-shadow: 0 6px 12px rgba(217, 145, 0, 0.35);
 }
 
 /* Glassmorphism Hero Card */
@@ -77,36 +88,63 @@ body {
 }
 
 .text-gradient-purple-blue {
-    background: linear-gradient(135deg, #1f4068 0%, #162447 100%);
+    background: linear-gradient(135deg, #b8860b 0%, #745100 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 /* Custom Buttons & Transitions */
 .btn-gradient-blue {
-    background: linear-gradient(135deg, #1f4068 0%, #162447 100%);
+    background: linear-gradient(135deg, #d99100 0%, #a66f00 100%);
     border: none;
-    color: white;
+    color: #111111;
+    font-weight: 600;
 }
 
 .btn-gradient-blue:hover {
-    background: linear-gradient(135deg, #162447 0%, #1f4068 100%);
-    color: white;
+    background: linear-gradient(135deg, #a66f00 0%, #d99100 100%);
+    color: #111111;
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(22, 36, 71, 0.25) !important;
+    box-shadow: 0 8px 20px rgba(217, 145, 0, 0.3) !important;
 }
 
 .btn-outline-primary {
-    border: 2px solid #1f4068;
-    color: #1f4068;
+    border: 2px solid #a66f00;
+    color: #a66f00;
 }
 
 .btn-outline-primary:hover {
-    background-color: #1f4068;
-    border-color: #1f4068;
+    background-color: #a66f00;
+    border-color: #a66f00;
     color: white;
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(31, 64, 104, 0.15) !important;
+    box-shadow: 0 8px 20px rgba(166, 111, 0, 0.2) !important;
+}
+
+/* Global Bootstrap Primary Overrides */
+.btn-primary {
+    --bs-btn-bg: #d99100;
+    --bs-btn-border-color: #d99100;
+    --bs-btn-hover-bg: #b37700;
+    --bs-btn-hover-border-color: #b37700;
+    --bs-btn-active-bg: #8c5e00;
+    --bs-btn-active-border-color: #8c5e00;
+    --bs-btn-color: #111111;
+    --bs-btn-hover-color: #111111;
+    --bs-btn-active-color: #ffffff;
+}
+
+.bg-primary-subtle {
+    background-color: #fff9e6 !important;
+}
+
+.text-primary {
+    color: #a66f00 !important;
+}
+
+.badge.bg-primary-subtle.text-primary {
+    background-color: #fff4d4 !important;
+    color: #8c5e00 !important;
 }
 
 .transition-all {

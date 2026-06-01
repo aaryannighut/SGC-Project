@@ -1,0 +1,145 @@
+<% layout('includes/boilerplate') -%>
+
+<div class="container my-4">
+    <!-- Dashboard Header -->
+    <div class="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-3">
+        <div>
+            <h1 class="display-5 fw-bold text-gradient-purple-blue mb-0">🛡️ Admin Dashboard</h1>
+            <p class="text-muted mb-0">Overview of Shri Ganesh Classes Management System</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="/admin/logout" class="btn btn-outline-danger px-4 py-2 rounded-pill fw-bold transition-all">
+                🚪 Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Analytics / Stats Row -->
+    <div class="row g-4 mb-5">
+        <!-- Students Count Card -->
+        <div class="col-12 col-md-4">
+            <div class="card border-0 rounded-4 shadow-sm bg-white-glass hero-card h-100 position-relative overflow-hidden">
+                <div class="card-body p-4 d-flex align-items-center">
+                    <div class="bg-primary-subtle text-primary rounded-4 p-3 me-3 fs-3">
+                        🎓
+                    </div>
+                    <div>
+                        <div class="text-muted small fw-medium text-uppercase tracking-wider">Total Students</div>
+                        <h2 class="display-6 fw-extrabold text-dark mb-0 mt-1"><%= studentCount %></h2>
+                    </div>
+                </div>
+                <div class="position-absolute bottom-0 start-0 end-0 h-1 bg-gradient-blue"></div>
+            </div>
+        </div>
+
+        <!-- Teachers Count Card -->
+        <div class="col-12 col-md-4">
+            <div class="card border-0 rounded-4 shadow-sm bg-white-glass hero-card h-100 position-relative overflow-hidden">
+                <div class="card-body p-4 d-flex align-items-center">
+                    <div class="bg-primary-subtle text-primary rounded-4 p-3 me-3 fs-3">
+                        👨‍🏫
+                    </div>
+                    <div>
+                        <div class="text-muted small fw-medium text-uppercase tracking-wider">Total Teachers</div>
+                        <h2 class="display-6 fw-extrabold text-dark mb-0 mt-1"><%= teacherCount %></h2>
+                    </div>
+                </div>
+                <div class="position-absolute bottom-0 start-0 end-0 h-1 bg-gradient-blue"></div>
+            </div>
+        </div>
+
+        <!-- Classes Count Card -->
+        <div class="col-12 col-md-4">
+            <div class="card border-0 rounded-4 shadow-sm bg-white-glass hero-card h-100 position-relative overflow-hidden">
+                <div class="card-body p-4 d-flex align-items-center">
+                    <div class="bg-primary-subtle text-primary rounded-4 p-3 me-3 fs-3">
+                        🏫
+                    </div>
+                    <div>
+                        <div class="text-muted small fw-medium text-uppercase tracking-wider">Active Classes</div>
+                        <h2 class="display-6 fw-extrabold text-dark mb-0 mt-1"><%= classCount %></h2>
+                    </div>
+                </div>
+                <div class="position-absolute bottom-0 start-0 end-0 h-1 bg-gradient-blue"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Navigation / Resource Panels -->
+    <div class="row g-4">
+        <!-- Resource Registries -->
+        <div class="col-12 col-lg-8">
+            <div class="card border-0 rounded-4 shadow-sm bg-white-glass p-4 h-100">
+                <h4 class="fw-bold text-dark mb-4">🗂️ Manage Directories</h4>
+                <div class="row g-3">
+                    <div class="col-12 col-sm-6">
+                        <div class="card border-0 bg-light rounded-3 p-3 h-100 d-flex flex-column justify-content-between transition-all hero-card">
+                            <div>
+                                <h5 class="fw-bold text-dark mb-2">Student Directory</h5>
+                                <p class="small text-muted mb-0">View all student profiles, modify records, enroll new students, and search coordinates.</p>
+                            </div>
+                            <div class="mt-4 d-flex justify-content-between align-items-center">
+                                <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-1.5 fw-bold"><%= studentCount %> Registered</span>
+                                <a href="/students" class="btn btn-sm btn-gradient-blue rounded-pill px-3 py-1.5 fw-semibold transition-all">Go to Registry ➔</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="card border-0 bg-light rounded-3 p-3 h-100 d-flex flex-column justify-content-between transition-all hero-card">
+                            <div>
+                                <h5 class="fw-bold text-dark mb-2">Teacher Directory</h5>
+                                <p class="small text-muted mb-0">Register staff members, assign coordinators, edit information, and view profile files.</p>
+                            </div>
+                            <div class="mt-4 d-flex justify-content-between align-items-center">
+                                <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-1.5 fw-bold"><%= teacherCount %> Instructors</span>
+                                <a href="/teachers" class="btn btn-sm btn-gradient-blue rounded-pill px-3 py-1.5 fw-semibold transition-all">Go to Registry ➔</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card border-0 bg-light rounded-3 p-3 h-100 d-flex flex-column justify-content-between transition-all hero-card mt-2">
+                            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+                                <div>
+                                    <h5 class="fw-bold text-dark mb-1">Class Schedules</h5>
+                                    <p class="small text-muted mb-0">Configure class sections and link teachers with their academic standard.</p>
+                                </div>
+                                <div class="mt-3 mt-sm-0 text-sm-end">
+                                    <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-1.5 fw-bold me-2"><%= classCount %> standards</span>
+                                    <a href="/classes" class="btn btn-sm btn-gradient-blue rounded-pill px-3 py-1.5 fw-semibold transition-all">Setup Classes ➔</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions Sidebar -->
+        <div class="col-12 col-lg-4">
+            <div class="card border-0 rounded-4 shadow-sm bg-white-glass p-4 h-100">
+                <h4 class="fw-bold text-dark mb-4">⚡ Quick Actions</h4>
+                <div class="d-flex flex-column gap-3">
+                    <a href="/students/new" class="btn btn-outline-primary py-3 rounded-3 text-start fw-bold transition-all d-flex align-items-center justify-content-between">
+                        <span>🎓 Add New Student</span>
+                        <span>➔</span>
+                    </a>
+                    
+                    <a href="/teachers/new" class="btn btn-outline-primary py-3 rounded-3 text-start fw-bold transition-all d-flex align-items-center justify-content-between">
+                        <span>👨‍🏫 Add New Teacher</span>
+                        <span>➔</span>
+                    </a>
+
+                    <a href="/classes" class="btn btn-outline-primary py-3 rounded-3 text-start fw-bold transition-all d-flex align-items-center justify-content-between">
+                        <span>🏫 Assign Class Coordinator</span>
+                        <span>➔</span>
+                    </a>
+                </div>
+                
+                <div class="mt-5 p-3 bg-primary-subtle rounded-3 border border-warning border-opacity-25">
+                    <h6 class="fw-bold text-primary mb-1">💡 Administrative Note</h6>
+                    <p class="small text-muted mb-0">For security reasons, do not share credentials. Admin usernames and passwords can be configured inside the environment configurations.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
