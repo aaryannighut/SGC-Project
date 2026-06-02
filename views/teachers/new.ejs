@@ -18,30 +18,25 @@
                         <div class="invalid-feedback">Please enter the teacher's name.</div>
                     </div>
                     
-                    <!-- Email -->
+                    <!-- Username -->
                     <div class="mb-3">
-                        <label for="email" class="form-label fw-semibold">Email Address</label>
-                        <input type="email" class="form-control rounded-3" id="email" name="teacher[email]" placeholder="e.g. minerva@hogwarts.edu" required>
-                        <div class="invalid-feedback">Please enter a valid email address.</div>
+                        <label for="username" class="form-label fw-semibold">Username</label>
+                        <input type="text" class="form-control rounded-3" id="username" name="teacher[username]" placeholder="e.g. minerva123" required>
+                        <div class="invalid-feedback">Please enter a username.</div>
+                    </div>
+                    
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label fw-semibold">Password</label>
+                        <input type="password" class="form-control rounded-3" id="password" name="teacher[password]" placeholder="Enter password for teacher" required>
+                        <div class="invalid-feedback">Please enter a password.</div>
                     </div>
                     
                     <!-- Mobile -->
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label for="mobile" class="form-label fw-semibold">Mobile Number</label>
                         <input type="tel" class="form-control rounded-3" id="mobile" name="teacher[mobile]" placeholder="e.g. 9876543210" pattern="[0-9]{10}" required>
                         <div class="invalid-feedback">Please enter a valid 10-digit mobile number.</div>
-                    </div>
-                    
-                    <!-- Assigned Class -->
-                    <div class="mb-4">
-                        <label for="assignedClass" class="form-label fw-semibold">Assigned Class (Optional)</label>
-                        <select class="form-select rounded-3" id="assignedClass" name="teacher[assignedClass]">
-                            <option value="">No Class Assigned</option>
-                            <% for (let classObj of classes) { %>
-                                <option value="<%= classObj._id %>"><%= classObj.className %></option>
-                            <% } %>
-                        </select>
-                        <div class="form-text text-muted small">You can link this teacher to an existing class.</div>
                     </div>
                     
                     <!-- Submit Button -->

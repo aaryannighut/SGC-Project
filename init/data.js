@@ -6,62 +6,71 @@
 const sampleStudents = [
     {
         name: "Aarav Sharma",
-        rollNo: "S-501",
+        serialNo: 1,
         className: "5th",
         parentName: "Rajesh Sharma",
-        parentMobile: "9876543210"
+        parentMobile: "9876543210",
+        status: "Absent"
     },
     {
         name: "Isha Patel",
-        rollNo: "S-601",
+        serialNo: 2,
         className: "6th",
         parentName: "Amit Patel",
-        parentMobile: "9123456789"
+        parentMobile: "9123456789",
+        status: "Absent"
     },
     {
         name: "Rohan Verma",
-        rollNo: "S-701",
+        serialNo: 3,
         className: "7th",
         parentName: "Sanjay Verma",
-        parentMobile: "9988776655"
+        parentMobile: "9988776655",
+        status: "Absent"
     },
     {
         name: "Ananya Iyer",
-        rollNo: "S-801",
+        serialNo: 4,
         className: "8th",
         parentName: "Raman Iyer",
-        parentMobile: "9876123456"
+        parentMobile: "9876123456",
+        status: "Absent"
     },
     {
         name: "Kabir Singh",
-        rollNo: "S-901",
+        serialNo: 5,
         className: "9th",
         parentName: "Jasbir Singh",
-        parentMobile: "9567890123"
+        parentMobile: "9567890123",
+        status: "Absent"
     },
     {
         name: "Diya Mehta",
-        rollNo: "S-1001",
+        serialNo: 6,
         className: "10th",
         parentName: "Pankaj Mehta",
-        parentMobile: "9432109876"
+        parentMobile: "9432109876",
+        status: "Absent"
     }
 ];
 
 const sampleTeachers = [
     {
         name: "Aditya Kulkarni",
-        email: "aditya.k@shriganesh.edu",
+        username: "aditya123",
+        password: "password123",
         mobile: "8765432109"
     },
     {
         name: "Sneha Deshmukh",
-        email: "sneha.d@shriganesh.edu",
+        username: "sneha123",
+        password: "password123",
         mobile: "8123456789"
     },
     {
         name: "Vikram Joshi",
-        email: "vikram.j@shriganesh.edu",
+        username: "vikram123",
+        password: "password123",
         mobile: "8988776655"
     }
 ];

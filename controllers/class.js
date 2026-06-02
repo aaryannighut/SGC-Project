@@ -34,11 +34,6 @@ module.exports.createClass = async (req, res) => {
     const newClass = new Class(classData);
     await newClass.save();
     
-    // Sync with Teacher: update the assignedClass of the teacher
-    if (newClass.assignedTeacher) {
-        await Teacher.findByIdAndUpdate(newClass.assignedTeacher, { assignedClass: newClass._id });
-    }
-    
     res.redirect('/classes');
 };
 
@@ -61,18 +56,6 @@ module.exports.updateClass = async (req, res) => {
     
     const updatedClass = await Class.findByIdAndUpdate(id, { ...classData }, { new: true, runValidators: true });
     
-    // Sync teacher relationships
-    if (String(oldClass.assignedTeacher) !== String(updatedClass.assignedTeacher)) {
-        // Remove class from old teacher
-        if (oldClass.assignedTeacher) {
-            await Teacher.findByIdAndUpdate(oldClass.assignedTeacher, { assignedClass: null });
-        }
-        // Add class to new teacher
-        if (updatedClass.assignedTeacher) {
-            await Teacher.findByIdAndUpdate(updatedClass.assignedTeacher, { assignedClass: updatedClass._id });
-        }
-    }
-    
     res.redirect('/classes');
 };
 
@@ -82,11 +65,6 @@ module.exports.deleteClass = async (req, res) => {
     const classItem = await Class.findById(id);
     if (!classItem) {
         throw new ExpressError(404, 'Class not found');
-    }
-    
-    // Remove class reference from the assigned teacher
-    if (classItem.assignedTeacher) {
-        await Teacher.findByIdAndUpdate(classItem.assignedTeacher, { assignedClass: null });
     }
     
     await Class.findByIdAndDelete(id);

@@ -20,9 +20,8 @@
                     <thead class="table-light text-secondary border-bottom">
                         <tr>
                             <th class="ps-4 py-3">Teacher Name</th>
-                            <th class="py-3">Email Address</th>
+                            <th class="py-3">Username</th>
                             <th class="py-3">Mobile No</th>
-                            <th class="py-3">Assigned Class</th>
                             <th class="pe-4 py-3 text-end">Actions</th>
                         </tr>
                     </thead>
@@ -31,22 +30,11 @@
                             <% for (let teacher of teachers) { %>
                                 <tr class="transition-all">
                                     <td class="ps-4 fw-semibold text-dark"><%= teacher.name %></td>
-                                    <td class="text-secondary"><%= teacher.email %></td>
+                                    <td class="text-secondary"><%= teacher.username %></td>
                                     <td>
                                         <a href="tel:<%= teacher.mobile %>" class="text-decoration-none text-muted small fw-medium">
                                             📞 <%= teacher.mobile %>
                                         </a>
-                                    </td>
-                                    <td>
-                                        <% if (teacher.assignedClass) { %>
-                                            <span class="badge bg-success-subtle text-success rounded-pill px-2.5 py-1.5 fw-semibold">
-                                                <%= teacher.assignedClass.className %> Class
-                                            </span>
-                                        <% } else { %>
-                                            <span class="badge bg-warning-subtle text-warning rounded-pill px-2.5 py-1.5 fw-semibold">
-                                                Unassigned
-                                            </span>
-                                        <% } %>
                                     </td>
                                     <td class="pe-4 text-end">
                                         <div class="d-flex justify-content-end gap-2">
@@ -67,7 +55,7 @@
                             <% } %>
                         <% } else { %>
                             <tr>
-                                <td colspan="5" class="text-center py-5 text-muted">
+                                <td colspan="4" class="text-center py-5 text-muted">
                                     <span class="fs-1 d-block mb-3">📁</span>
                                     <span class="fw-semibold">No teachers registered yet.</span>
                                     <a href="/teachers/new" class="d-block mt-2 text-primary fw-bold text-decoration-none small">Add the first teacher now</a>

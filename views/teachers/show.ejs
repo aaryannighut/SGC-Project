@@ -22,30 +22,22 @@
                 <!-- Card Body -->
                 <div class="card-body p-4">
                     <div class="row g-4">
-                        <div class="col-12 text-center mb-2">
-                            <span class="d-block small text-muted text-uppercase tracking-wider fw-medium mb-1">Class Assigned</span>
-                            <% if (teacher.assignedClass) { %>
-                                <h3 class="fw-bold text-success m-0">
-                                    <span class="me-1">🏫</span><%= teacher.assignedClass.className %> Class
-                                </h3>
-                            <% } else { %>
-                                <h4 class="fw-bold text-muted m-0">
-                                    <span class="me-1">⚠️</span>No Assigned Class
-                                </h4>
-                            <% } %>
-                        </div>
-                        
-                        <div class="col-12 border-top pt-4">
-                            <h5 class="fw-bold text-dark mb-3">Contact Details</h5>
+                        <div class="col-12">
+                            <h5 class="fw-bold text-dark mb-3">Teacher Account Details</h5>
                             
                             <div class="d-flex flex-column gap-3">
                                 <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3 transition-all">
-                                    <span class="fs-4">📧</span>
+                                    <span class="fs-4">👤</span>
                                     <div>
-                                        <span class="d-block small text-muted">Email Address</span>
-                                        <a href="mailto:<%= teacher.email %>" class="text-decoration-none fw-semibold text-dark">
-                                            <%= teacher.email %>
-                                        </a>
+                                        <span class="d-block small text-muted">Username</span>
+                                        <span class="fw-bold text-dark"><%= teacher.username %></span>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3 transition-all">
+                                    <span class="fs-4">🔒</span>
+                                    <div>
+                                        <span class="d-block small text-muted">Password</span>
+                                        <span class="fw-mono text-dark"><%= teacher.password %></span>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3 transition-all">

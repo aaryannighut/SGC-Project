@@ -1,0 +1,62 @@
+<% layout('includes/boilerplate') -%>
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden bg-white-glass hero-card my-4">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <img src="/images/logo.png" alt="Shri Ganesh Classes Logo" width="80" height="80" class="rounded-circle shadow border border-warning border-3 mb-3" style="object-fit: cover; background-color: #ffffff;">
+                    <h3 class="fw-extrabold text-gradient-purple-blue mb-1">Teacher Portal</h3>
+                    <p class="text-muted small">Sign in with the credentials provided by the admin to mark student attendance</p>
+                </div>
+                
+                <form action="/teacher/login" method="POST" class="needs-validation" novalidate>
+                    <div class="mb-4">
+                        <label for="username" class="form-label fw-bold text-dark">Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border border-end-0 rounded-start-3 text-muted"><span class="fs-6">👤</span></span>
+                            <input type="text" class="form-control bg-white border border-start-0 rounded-end-3 py-2.5" id="username" name="username" placeholder="Enter teacher username" required>
+                            <div class="invalid-feedback">
+                                Please enter your username.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="password" class="form-label fw-bold text-dark">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border border-end-0 rounded-start-3 text-muted"><span class="fs-6">🔒</span></span>
+                            <input type="password" class="form-control bg-white border border-start-0 rounded-end-3 py-2.5" id="password" name="password" placeholder="Enter password" required>
+                            <div class="invalid-feedback">
+                                Please enter your password.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid mt-5">
+                        <button type="submit" class="btn btn-primary py-2.5 rounded-pill fw-bold btn-gradient-blue shadow transition-all text-uppercase tracking-wide">
+                            Login as Teacher
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Bootstrap client-side validation script
+    (() => {
+        'use strict'
+        const forms = document.querySelectorAll('.needs-validation')
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>

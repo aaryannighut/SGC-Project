@@ -4,8 +4,8 @@
     <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-6">
             <!-- Back Button -->
-            <a href="/students" class="btn btn-link text-decoration-none text-muted mb-4 p-0 fw-semibold d-inline-flex align-items-center gap-1">
-                <span>⬅️</span> Back to Registry
+            <a href="/students/class/<%= student.className %>" class="btn btn-link text-decoration-none text-muted mb-4 p-0 fw-semibold d-inline-flex align-items-center gap-1">
+                <span>⬅️</span> Back to <%= student.className %> Class Registry
             </a>
             
             <!-- Student Detail Card -->
@@ -16,7 +16,7 @@
                         <%= student.name.charAt(0).toUpperCase() %>
                     </div>
                     <h2 class="fw-bold mb-1"><%= student.name %></h2>
-                    <span class="badge bg-white text-dark rounded-pill px-3 py-1.5 fw-semibold small shadow-sm">Roll No: <%= student.rollNo %></span>
+                    <span class="badge bg-white text-dark rounded-pill px-3 py-1.5 fw-semibold small shadow-sm">S.No: <%= student.serialNo %></span>
                 </div>
                 
                 <!-- Card Body -->

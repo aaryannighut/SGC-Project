@@ -12,10 +12,9 @@ const studentSchema = new Schema({
         required: true,
         trim: true
     },
-    rollNo: {
-        type: String,
-        required: true,
-        trim: true
+    serialNo: {
+        type: Number,
+        required: true
     },
     className: {
         type: String,
@@ -31,6 +30,11 @@ const studentSchema = new Schema({
         type: String,
         required: true,
         trim: true
+    },
+    status: {
+        type: String,
+        enum: ['Present', 'Absent'],
+        default: 'Absent'
     }
 }, { timestamps: true });
 

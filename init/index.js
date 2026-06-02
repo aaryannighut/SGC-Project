@@ -39,23 +39,18 @@ async function seedDB() {
         }
         console.log("Created Class standards: 5th, 6th, 7th, 8th, 9th, 10th.");
 
-        // Seed Teachers and build bidirectional class links
+        // Seed Teachers and link them to Classes one-way
         for (let i = 0; i < sampleTeachers.length; i++) {
             const teacherData = sampleTeachers[i];
-            
-            // Link teachers: 1st teacher -> 10th, 2nd -> 9th, 3rd -> 8th
+            const teacher = new Teacher(teacherData);
+            await teacher.save();
+
+            // Link class to teacher: 10th class -> 1st teacher, 9th class -> 2nd teacher, 8th class -> 3rd teacher
             let targetClassDoc = null;
             if (i === 0) targetClassDoc = classDocs.find(c => c.className === '10th');
             if (i === 1) targetClassDoc = classDocs.find(c => c.className === '9th');
             if (i === 2) targetClassDoc = classDocs.find(c => c.className === '8th');
 
-            const teacher = new Teacher({
-                ...teacherData,
-                assignedClass: targetClassDoc ? targetClassDoc._id : null
-            });
-            await teacher.save();
-
-            // Set the Class's assignedTeacher to sync relationships
             if (targetClassDoc) {
                 await Class.findByIdAndUpdate(targetClassDoc._id, { assignedTeacher: teacher._id });
             }
