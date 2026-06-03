@@ -1,15 +1,22 @@
 <% layout('includes/boilerplate') -%>
 
 <div class="container my-4">
+    <!-- Back Button -->
+    <a href="/students" class="btn btn-link text-decoration-none text-muted mb-3 p-0 fw-semibold d-inline-flex align-items-center gap-1">
+        <span>⬅️</span> Back to Class Selector
+    </a>
+    
     <!-- Header Section -->
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div>
-            <h1 class="display-5 fw-bold text-gradient-purple-blue mb-0">Students Registry</h1>
-            <p class="text-muted mb-0">Manage all student records and class assignments</p>
+            <h1 class="display-5 fw-bold text-gradient-purple-blue mb-0">Class <%= className %> Registry</h1>
+            <p class="text-muted mb-0">Manage student records for the active <%= className %> standard section</p>
         </div>
-        <a href="/students/new" class="btn btn-primary px-4 py-2.5 rounded-pill fw-bold btn-gradient-blue shadow transition-all">
+        <% if (isAdmin) { %>
+        <a href="/students/class/<%= className %>/new" class="btn btn-primary px-4 py-2.5 rounded-pill fw-bold btn-gradient-blue shadow transition-all">
             <span class="me-1">➕</span> Add New Student
         </a>
+        <% } %>
     </div>
 
     <!-- Table Container Card with Glassmorphism -->
@@ -19,8 +26,9 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light text-secondary border-bottom">
                         <tr>
-                            <th class="ps-4 py-3">Name</th>
-                            <th class="py-3">Roll No</th>
+                            <th class="ps-4 py-3">S.No.</th>
+                            <th class="py-3">Presentee</th>
+                            <th class="py-3">Name</th>
                             <th class="py-3">Class</th>
                             <th class="py-3">Parent Name</th>
                             <th class="py-3">Parent Mobile</th>
@@ -31,10 +39,16 @@
                         <% if (students && students.length > 0) { %>
                             <% for (let student of students) { %>
                                 <tr class="transition-all">
-                                    <td class="ps-4 fw-semibold text-dark"><%= student.name %></td>
+                                    <td class="ps-4 fw-semibold text-dark"><%= student.serialNo %></td>
                                     <td>
-                                        <span class="badge bg-secondary-subtle text-secondary rounded-pill px-2.5 py-1.5 fw-medium"><%= student.rollNo %></span>
+                                        <div class="form-check form-switch m-0 d-inline-block">
+                                            <input class="form-check-input attendance-toggle transition-all" type="checkbox" role="switch" id="switch-<%= student._id %>" data-id="<%= student._id %>" <%= student.status === 'Present' ? 'checked' : '' %> style="cursor: pointer; width: 2.2em; height: 1.1em;">
+                                            <label class="form-check-label ms-2 small fw-bold <%= student.status === 'Present' ? 'text-success' : 'text-muted' %>" id="label-<%= student._id %>" for="switch-<%= student._id %>" style="min-width: 50px;">
+                                                <%= student.status || 'Absent' %>
+                                            </label>
+                                        </div>
                                     </td>
+                                    <td class="fw-semibold text-dark"><%= student.name %></td>
                                     <td>
                                         <span class="badge bg-primary-subtle text-primary rounded-pill px-2.5 py-1.5 fw-semibold"><%= student.className %></span>
                                     </td>
@@ -49,6 +63,7 @@
                                             <a href="/students/<%= student._id %>" class="btn btn-sm btn-outline-primary px-3 rounded-pill transition-all fw-semibold">
                                                 👁️ View
                                             </a>
+                                            <% if (isAdmin) { %>
                                             <a href="/students/<%= student._id %>/edit" class="btn btn-sm btn-outline-secondary px-3 rounded-pill transition-all fw-semibold">
                                                 ✏️ Edit
                                             </a>
@@ -57,16 +72,19 @@
                                                     🗑️ Delete
                                                 </button>
                                             </form>
+                                            <% } %>
                                         </div>
                                     </td>
                                 </tr>
                             <% } %>
                         <% } else { %>
                             <tr>
-                                <td colspan="6" class="text-center py-5 text-muted">
+                                <td colspan="7" class="text-center py-5 text-muted">
                                     <span class="fs-1 d-block mb-3">📁</span>
                                     <span class="fw-semibold">No students registered yet.</span>
+                                    <% if (isAdmin) { %>
                                     <a href="/students/new" class="d-block mt-2 text-primary fw-bold text-decoration-none small">Add the first student now</a>
+                                    <% } %>
                                 </td>
                             </tr>
                         <% } %>
@@ -76,3 +94,44 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.querySelectorAll('.attendance-toggle').forEach(toggle => {
+        toggle.addEventListener('change', async (e) => {
+            const studentId = e.target.getAttribute('data-id');
+            const status = e.target.checked ? 'Present' : 'Absent';
+            const label = document.getElementById(`label-${studentId}`);
+            
+            // Disable during network request
+            e.target.disabled = true;
+            
+            try {
+                const response = await fetch(`/students/${studentId}/attendance`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    label.textContent = data.status;
+                    if (data.status === 'Present') {
+                        label.className = 'form-check-label ms-2 small fw-bold text-success';
+                    } else {
+                        label.className = 'form-check-label ms-2 small fw-bold text-muted';
+                    }
+                } else {
+                    e.target.checked = !e.target.checked;
+                    alert('Error updating attendance. Please try again.');
+                }
+            } catch (err) {
+                e.target.checked = !e.target.checked;
+                alert('Connection error. Could not update attendance.');
+            } finally {
+                e.target.disabled = false;
+            }
+        });
+    });
+</script>

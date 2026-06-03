@@ -6,7 +6,7 @@
             <!-- Hero Container Card -->
             <div class="hero-card p-5 rounded-5 shadow-lg border border-light border-opacity-10 bg-white-glass">
                 <div class="hero-icon mb-4">
-                    <span class="display-1">📚</span>
+                    <img src="/images/logo.png" alt="Shri Ganesh Classes Logo" width="120" height="120" class="rounded-circle shadow border border-warning border-3" style="object-fit: cover; background-color: #ffffff;">
                 </div>
                 
                 <h1 class="display-3 fw-extrabold text-gradient-purple-blue mb-2">
@@ -14,18 +14,24 @@
                 </h1>
                 
                 <p class="fs-4 text-muted mb-5 font-weight-light">
-                    Attendance Management System
+                    Smart Academy & Class Management Suite
                 </p>
                 
                 <!-- CTA Action Buttons -->
                 <div class="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-4">
-                    <a href="#" class="btn btn-outline-primary btn-lg px-5 py-3 rounded-pill fw-bold shadow-sm transition-all text-uppercase tracking-wide w-100 w-sm-auto">
-                        <span class="me-2">🔑</span> Admin Login
-                    </a>
-                    
-                    <a href="#" class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold shadow-lg transition-all text-uppercase tracking-wide w-100 w-sm-auto btn-gradient-blue">
-                        <span class="me-2">👨‍🏫</span> Teacher Login
-                    </a>
+                    <% if (isAdmin) { %>
+                        <a href="/admin/dashboard" class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold shadow-lg transition-all text-uppercase tracking-wide w-100 w-sm-auto btn-gradient-blue">
+                            🛡️ Go to Dashboard
+                        </a>
+                    <% } else { %>
+                        <a href="/admin/login" class="btn btn-outline-primary btn-lg px-5 py-3 rounded-pill fw-bold shadow-sm transition-all text-uppercase tracking-wide w-100 w-sm-auto">
+                            <span class="me-2">🔑</span> Admin Login
+                        </a>
+                        
+                        <a href="/teacher/login" class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold shadow-lg transition-all text-uppercase tracking-wide w-100 w-sm-auto btn-gradient-blue">
+                            <span class="me-2">👨‍🏫</span> Teacher Login
+                        </a>
+                    <% } %>
                 </div>
             </div>
             

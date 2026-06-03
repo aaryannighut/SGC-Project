@@ -12,21 +12,20 @@ const teacherSchema = new Schema({
         required: true,
         trim: true
     },
-    email: {
+    username: {
         type: String,
         required: true,
         unique: true,
-        trim: true,
-        lowercase: true
+        trim: true
+    },
+    password: {
+        type: String,
+        required: true
     },
     mobile: {
         type: String,
         required: true,
         trim: true
-    },
-    assignedClass: {
-        type: Schema.Types.ObjectId,
-        ref: 'Class'
     }
 }, { timestamps: true });
 

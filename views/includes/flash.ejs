@@ -1,0 +1,14 @@
+<!-- views/includes/flash.ejs -->
+<% if (success && success.length) { %>
+    <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm border-0 border-start border-4 border-success bg-success bg-opacity-10 text-success-emphasis" role="alert">
+        <span class="me-2">✅</span> <%= success %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<% } %>
+
+<% if (error && error.length) { %>
+    <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm border-0 border-start border-4 border-danger bg-danger bg-opacity-10 text-danger-emphasis" role="alert">
+        <span class="me-2">❌</span> <%= error %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<% } %>
