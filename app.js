@@ -84,7 +84,7 @@ const Teacher = require('./models/teacher');
 
 // Home Route
 app.get('/', (req, res) => {
-    res.render('home', { title: 'Shri Ganesh Classes Attendance System' });
+    res.render('home', { title: 'Shri Ganesh Classes - Smart Academy Suite' });
 });
 
 // Teacher Authentication Routes

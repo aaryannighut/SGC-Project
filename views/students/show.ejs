@@ -61,6 +61,7 @@
                 </div>
                 
                 <!-- Actions Footer -->
+                <% if (isAdmin) { %>
                 <div class="card-footer bg-light border-0 p-4 d-flex justify-content-between gap-3">
                     <a href="/students/<%= student._id %>/edit" class="btn btn-outline-primary px-4 py-2.5 rounded-pill fw-bold w-100 transition-all text-center">
                         ✏️ Edit Details
@@ -72,6 +73,7 @@
                         </button>
                     </form>
                 </div>
+                <% } %>
             </div>
         </div>
     </div>

@@ -12,9 +12,11 @@
             <h1 class="display-5 fw-bold text-gradient-purple-blue mb-0">Class <%= className %> Registry</h1>
             <p class="text-muted mb-0">Manage student records for the active <%= className %> standard section</p>
         </div>
+        <% if (isAdmin) { %>
         <a href="/students/class/<%= className %>/new" class="btn btn-primary px-4 py-2.5 rounded-pill fw-bold btn-gradient-blue shadow transition-all">
             <span class="me-1">➕</span> Add New Student
         </a>
+        <% } %>
     </div>
 
     <!-- Table Container Card with Glassmorphism -->
@@ -61,6 +63,7 @@
                                             <a href="/students/<%= student._id %>" class="btn btn-sm btn-outline-primary px-3 rounded-pill transition-all fw-semibold">
                                                 👁️ View
                                             </a>
+                                            <% if (isAdmin) { %>
                                             <a href="/students/<%= student._id %>/edit" class="btn btn-sm btn-outline-secondary px-3 rounded-pill transition-all fw-semibold">
                                                 ✏️ Edit
                                             </a>
@@ -69,6 +72,7 @@
                                                     🗑️ Delete
                                                 </button>
                                             </form>
+                                            <% } %>
                                         </div>
                                     </td>
                                 </tr>
@@ -78,7 +82,9 @@
                                 <td colspan="7" class="text-center py-5 text-muted">
                                     <span class="fs-1 d-block mb-3">📁</span>
                                     <span class="fw-semibold">No students registered yet.</span>
+                                    <% if (isAdmin) { %>
                                     <a href="/students/new" class="d-block mt-2 text-primary fw-bold text-decoration-none small">Add the first student now</a>
+                                    <% } %>
                                 </td>
                             </tr>
                         <% } %>
