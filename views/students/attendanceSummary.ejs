@@ -1,0 +1,146 @@
+<% layout('includes/boilerplate') -%>
+
+<div class="container my-4">
+    <!-- Back Button -->
+    <a href="/students/class/<%= className %>" class="btn btn-link text-decoration-none text-muted mb-3 p-0 fw-semibold d-inline-flex align-items-center gap-1">
+        <span>⬅️</span> Back to Registry
+    </a>
+    
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+            <h1 class="display-5 fw-bold text-gradient-purple-blue mb-0">Attendance Summary</h1>
+            <p class="text-muted mb-0">Review the absent students report for Class <%= className %> standard</p>
+        </div>
+    </div>
+
+    <!-- IST Time and Date Card -->
+    <div class="card border-0 rounded-4 shadow-sm bg-white-glass p-3 mb-4">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div class="d-flex align-items-center gap-2">
+                <span class="fs-5">📅</span>
+                <span class="fw-semibold text-secondary">Indian Standard Time (IST):</span>
+            </div>
+            <span class="fw-bold text-dark fs-5" id="current-time-ist">Loading date & time...</span>
+        </div>
+    </div>
+
+    <!-- Statistics Overview Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-12 col-md-4">
+            <div class="card border-0 rounded-4 shadow-sm bg-white-glass p-4 text-center hero-card">
+                <span class="fs-1 mb-2">👥</span>
+                <div class="text-muted small fw-medium text-uppercase tracking-wider">Total Strength</div>
+                <h3 class="fw-extrabold text-dark mb-0 mt-1"><%= totalCount %></h3>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card border-0 rounded-4 shadow-sm bg-white-glass p-4 text-center hero-card">
+                <span class="fs-1 mb-2">✅</span>
+                <div class="text-muted small fw-medium text-uppercase tracking-wider">Present Students</div>
+                <h3 class="fw-extrabold text-success mb-0 mt-1"><%= presentCount %></h3>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card border-0 rounded-4 shadow-sm bg-white-glass p-4 text-center hero-card">
+                <span class="fs-1 mb-2">🚨</span>
+                <div class="text-muted small fw-medium text-uppercase tracking-wider">Absent Students</div>
+                <h3 class="fw-extrabold text-danger mb-0 mt-1"><%= absentCount %></h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Absent Students Table -->
+    <div class="card border-0 rounded-4 shadow-sm bg-white-glass overflow-hidden mb-4">
+        <div class="card-header bg-danger-subtle border-0 py-3 px-4">
+            <h5 class="fw-bold text-danger mb-0 d-flex align-items-center gap-2">
+                <span>⚠️</span> Absent Students List
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light text-secondary border-bottom">
+                        <tr>
+                            <th class="ps-4 py-3" style="width: 100px;">Roll No</th>
+                            <th class="py-3">Student Name</th>
+                            <th class="py-3">Parent Name</th>
+                            <th class="pe-4 py-3">Parent Mobile</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (absentStudents && absentStudents.length > 0) { %>
+                            <% for (let student of absentStudents) { %>
+                                <tr class="border-bottom-0">
+                                    <td class="ps-4 fw-semibold text-dark"><%= student.serialNo %></td>
+                                    <td class="fw-bold text-danger"><%= student.name %></td>
+                                    <td class="text-secondary"><%= student.parentName %></td>
+                                    <td class="pe-4">
+                                        <a href="tel:<%= student.parentMobile %>" class="text-decoration-none text-muted small fw-medium">
+                                            📞 <%= student.parentMobile %>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="4" class="text-center py-5 text-success">
+                                    <span class="fs-1 d-block mb-3">🎉</span>
+                                    <span class="fw-bold fs-5">All students are present!</span>
+                                    <p class="text-muted mb-0 small mt-1">Excellent class attendance today.</p>
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submit Form -->
+    <form action="/students/class/<%= className %>/send-to-admin" method="POST" class="d-flex justify-content-end mt-4">
+        <% if (isAdmin) { %>
+            <button type="submit" class="btn btn-lg rounded-pill fw-bold shadow-sm px-5 py-3 border-0 text-white transition-all" style="background-color: #25D366;" id="whatsapp-send-btn">
+                💬 Record & Send WhatsApp Notifications
+            </button>
+        <% } else { %>
+            <button type="submit" class="btn btn-lg btn-gradient-blue rounded-pill fw-bold shadow-sm px-5 py-3 border-0 transition-all text-center">
+                📲 Send Report to Admin
+            </button>
+        <% } %>
+    </form>
+</div>
+
+<style>
+    #whatsapp-send-btn {
+        transition: all 0.25s ease-in-out;
+    }
+    #whatsapp-send-btn:hover {
+        background-color: #128C7E !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3) !important;
+    }
+</style>
+
+<script>
+    // Live ticking clock in IST timezone
+    function updateClock() {
+        const options = {
+            timeZone: 'Asia/Kolkata',
+            hour12: true,
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+        const formatter = new Intl.DateTimeFormat('en-IN', options);
+        const clockEl = document.getElementById('current-time-ist');
+        if (clockEl) {
+            clockEl.textContent = formatter.format(new Date());
+        }
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+</script>

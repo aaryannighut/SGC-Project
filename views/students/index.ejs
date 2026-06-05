@@ -19,6 +19,17 @@
         <% } %>
     </div>
 
+    <!-- IST Time and Date Card -->
+    <div class="card border-0 rounded-4 shadow-sm bg-white-glass p-3 mb-4">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div class="d-flex align-items-center gap-2">
+                <span class="fs-5">📅</span>
+                <span class="fw-semibold text-secondary">Indian Standard Time (IST):</span>
+            </div>
+            <span class="fw-bold text-dark fs-5" id="current-time-ist">Loading date & time...</span>
+        </div>
+    </div>
+
     <!-- Table Container Card with Glassmorphism -->
     <div class="card border-0 rounded-4 shadow-sm bg-white-glass overflow-hidden">
         <div class="card-body p-0">
@@ -60,6 +71,9 @@
                                     </td>
                                     <td class="pe-4 text-end">
                                         <div class="d-flex justify-content-end gap-2">
+                                            <a href="/students/<%= student._id %>/history" class="btn btn-sm btn-outline-dark px-3 rounded-pill transition-all fw-semibold">
+                                                📊 History
+                                            </a>
                                             <a href="/students/<%= student._id %>" class="btn btn-sm btn-outline-primary px-3 rounded-pill transition-all fw-semibold">
                                                 👁️ View
                                             </a>
@@ -93,9 +107,37 @@
             </div>
         </div>
     </div>
+
+    <!-- Submit Attendance Section -->
+    <div class="d-flex justify-content-end mt-4">
+        <a href="/students/class/<%= className %>/attendance-summary" class="btn btn-lg btn-gradient-blue rounded-pill fw-bold shadow-sm px-5 py-3 border-0 transition-all text-center">
+            📊 Review & Submit Attendance
+        </a>
+    </div>
 </div>
 
 <script>
+    // Live ticking clock in IST timezone
+    function updateClock() {
+        const options = {
+            timeZone: 'Asia/Kolkata',
+            hour12: true,
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+        const formatter = new Intl.DateTimeFormat('en-IN', options);
+        const clockEl = document.getElementById('current-time-ist');
+        if (clockEl) {
+            clockEl.textContent = formatter.format(new Date());
+        }
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
     document.querySelectorAll('.attendance-toggle').forEach(toggle => {
         toggle.addEventListener('change', async (e) => {
             const studentId = e.target.getAttribute('data-id');

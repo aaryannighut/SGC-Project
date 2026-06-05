@@ -3,6 +3,9 @@
  * Shri Ganesh Classes Attendance Management System
  */
 
+// Suppress deprecation warnings from third-party libraries (e.g., util.isArray)
+process.noDeprecation = true;
+
 require('dotenv').config();
 
 const express = require('express');
@@ -71,6 +74,17 @@ async function connectDB() {
     try {
         await mongoose.connect(dbUrl);
         console.log("MongoDB Connected");
+
+        // Proactively clean up obsolete unique email index from teachers collection
+        try {
+            await mongoose.connection.db.collection('teachers').dropIndex('email_1');
+            console.log("Obsolete unique email index dropped from teachers collection.");
+        } catch (idxErr) {
+            // Ignore NamespaceNotFound (26) and IndexNotFound (27) errors
+            if (idxErr.code !== 26 && idxErr.code !== 27 && idxErr.codeName !== 'IndexNotFound' && idxErr.codeName !== 'NamespaceNotFound') {
+                console.warn("Non-critical notice during index cleanup:", idxErr.message);
+            }
+        }
     } catch (err) {
         console.error("Database connection error:", err);
         process.exit(1);

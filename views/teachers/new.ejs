@@ -33,10 +33,17 @@
                     </div>
                     
                     <!-- Mobile -->
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label for="mobile" class="form-label fw-semibold">Mobile Number</label>
                         <input type="tel" class="form-control rounded-3" id="mobile" name="teacher[mobile]" placeholder="e.g. 9876543210" pattern="[0-9]{10}" required>
                         <div class="invalid-feedback">Please enter a valid 10-digit mobile number.</div>
+                    </div>
+                    
+                    <!-- Subject -->
+                    <div class="mb-4">
+                        <label for="subject" class="form-label fw-semibold">Subject Specialization</label>
+                        <input type="text" class="form-control rounded-3" id="subject" name="teacher[subject]" placeholder="e.g. Mathematics" required>
+                        <div class="invalid-feedback">Please enter the teacher's subject.</div>
                     </div>
                     
                     <!-- Submit Button -->

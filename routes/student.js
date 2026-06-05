@@ -22,11 +22,16 @@ router.get('/new', isAdmin, (req, res) => {
 router.get('/class/:className', wrapAsync(studentController.showClassRegistry));
 router.post('/class/:className', isAdmin, wrapAsync(studentController.createStudent));
 router.get('/class/:className/new', isAdmin, studentController.renderNewForm);
+router.get('/class/:className/attendance-summary', wrapAsync(studentController.showAttendanceSummary));
+router.post('/class/:className/send-to-admin', wrapAsync(studentController.sendAttendanceToAdmin));
 
 // /students/:id
 router.get('/:id', wrapAsync(studentController.showStudent));
 router.put('/:id', isAdmin, wrapAsync(studentController.updateStudent));
 router.delete('/:id', isAdmin, wrapAsync(studentController.deleteStudent));
+router.get('/:id/history', wrapAsync(studentController.showHistoryMonths));
+router.get('/:id/history/months', wrapAsync(studentController.showHistoryMonthsSelector));
+router.get('/:id/history/:year/:month', wrapAsync(studentController.showHistoryDetail));
 
 // /students/:id/attendance
 router.patch('/:id/attendance', wrapAsync(studentController.toggleAttendance));

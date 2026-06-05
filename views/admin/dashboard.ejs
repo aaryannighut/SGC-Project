@@ -114,4 +114,56 @@
             </div>
         </div>
     </div>
+
+    <!-- Daily Attendance Reports Section -->
+    <div class="row g-4 mt-2">
+        <div class="col-12">
+            <div class="card border-0 rounded-4 shadow-sm bg-white-glass p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                    <h4 class="fw-bold text-dark mb-0">📅 Daily Attendance Reports</h4>
+                    <span class="badge bg-light text-secondary border rounded-pill px-3 py-1.5 fw-semibold small">Today's Logs</span>
+                </div>
+                <div class="row g-3">
+                    <% const classes = ['5th', '6th', '7th', '8th', '9th', '10th']; %>
+                    <% for (let className of classes) { %>
+                        <% const summary = classAttendanceSummary[className]; %>
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <div class="card border-0 bg-light rounded-3 p-3 h-100 d-flex flex-column justify-content-between transition-all hero-card">
+                                <div>
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h5 class="fw-bold text-dark mb-0">Class <%= className %></h5>
+                                        <% if (summary.submitted) { %>
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-1 fw-bold small">Submitted</span>
+                                        <% } else { %>
+                                            <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2.5 py-1 fw-bold small">Pending</span>
+                                        <% } %>
+                                    </div>
+                                    <p class="small text-muted mb-0">
+                                        <% if (summary.submitted) { %>
+                                            <% if (summary.submittedByAdmin) { %>
+                                                Attendance has been successfully taken by Admin.
+                                            <% } else { %>
+                                                Attendance has been successfully sent by the class coordinator.
+                                            <% } %>
+                                        <% } else { %>
+                                            Today's registry has not been submitted by the teacher yet.
+                                        <% } %>
+                                    </p>
+                                </div>
+                                <div class="mt-4 d-flex justify-content-between align-items-center">
+                                    <% if (summary.submitted) { %>
+                                        <span class="badge bg-danger-subtle text-danger rounded-pill px-3 py-1.5 fw-extrabold"><%= summary.absentCount %> Absent</span>
+                                        <a href="/admin/attendance/class/<%= className %>" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1.5 fw-semibold transition-all">View Absentees ➔</a>
+                                    <% } else { %>
+                                        <span class="text-muted small italic">No records</span>
+                                        <button class="btn btn-sm btn-secondary rounded-pill px-3 py-1.5 fw-semibold transition-all" disabled>Unavailable</button>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

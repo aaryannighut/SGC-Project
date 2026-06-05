@@ -59,19 +59,22 @@ const sampleTeachers = [
         name: "Aditya Kulkarni",
         username: "aditya123",
         password: "password123",
-        mobile: "8765432109"
+        mobile: "8765432109",
+        subject: "Mathematics"
     },
     {
         name: "Sneha Deshmukh",
         username: "sneha123",
         password: "password123",
-        mobile: "8123456789"
+        mobile: "8123456789",
+        subject: "Science"
     },
     {
         name: "Vikram Joshi",
         username: "vikram123",
         password: "password123",
-        mobile: "8988776655"
+        mobile: "8988776655",
+        subject: "English"
     }
 ];
 

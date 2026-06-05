@@ -20,4 +20,7 @@ router.get('/logout', adminController.logout);
 // /admin/dashboard
 router.get('/dashboard', isAdminLoggedIn, wrapAsync(adminController.dashboard));
 
+// /admin/attendance/class/:className
+router.get('/attendance/class/:className', isAdminLoggedIn, wrapAsync(adminController.showClassAbsentees));
+
 module.exports = router;
