@@ -31,6 +31,10 @@ const attendanceSchema = new Schema({
         type: String,
         required: true,
         enum: ['Present', 'Absent']
+    },
+    submittedByAdmin: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 

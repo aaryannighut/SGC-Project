@@ -1,0 +1,118 @@
+<% layout('includes/boilerplate') -%>
+
+<div class="container my-4">
+    <!-- Back Button -->
+    <a href="/students/class/<%= student.className %>" class="btn btn-link text-decoration-none text-muted mb-3 p-0 fw-semibold d-inline-flex align-items-center gap-1">
+        <span>⬅️</span> Back to Class Registry
+    </a>
+    
+    <!-- Student Header Summary Card -->
+    <div class="card border-0 rounded-4 shadow-sm bg-white-glass p-4 mb-4">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div class="avatar-placeholder bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: 700;">
+                    <%= student.name.charAt(0).toUpperCase() %>
+                </div>
+                <div>
+                    <h2 class="fw-bold text-dark mb-0"><%= student.name %></h2>
+                    <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-1 fw-bold mt-1">Class <%= student.className %></span>
+                </div>
+            </div>
+            <div class="text-sm-end">
+                <span class="d-block small text-muted">Attendance Scope</span>
+                <span class="badge bg-dark rounded-pill px-3 py-1.5 fw-bold mt-1">
+                    <%= subject !== 'all' ? `Subject: ${subject}` : 'Overall Attendance' %>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- IST Time and Date Card -->
+    <div class="card border-0 rounded-4 shadow-sm bg-white-glass p-3 mb-4">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div class="d-flex align-items-center gap-2">
+                <span class="fs-5">📅</span>
+                <span class="fw-semibold text-secondary">Indian Standard Time (IST):</span>
+            </div>
+            <span class="fw-bold text-dark fs-5" id="current-time-ist">Loading date & time...</span>
+        </div>
+    </div>
+
+    <% if (subject === 'all') { %>
+        <div class="alert alert-warning border-0 rounded-4 shadow-sm bg-warning-subtle text-warning-emphasis p-3 mb-4 d-flex align-items-center gap-3">
+            <span class="fs-4">⚠️</span>
+            <div>
+                <strong class="fw-bold d-block">Overall Attendance Log Only</strong>
+                <span class="small text-secondary">Please note that this dashboard shows the cumulative overall attendance. Subject-specific filters are not displayed here.</span>
+            </div>
+        </div>
+    <% } %>
+
+    <!-- Month Selection Header -->
+    <div class="mb-4">
+        <h4 class="fw-bold text-dark mb-1">📅 Academic Calendar Year: <%= currentYear %></h4>
+        <p class="text-muted mb-0">Select any month below to view the detailed student attendance log and stats.</p>
+    </div>
+
+    <!-- 12-Month Cards Grid -->
+    <div class="row g-3">
+        <% 
+        const monthNames = [
+            'January', 'February', 'March', 'April', 'May', 'June', 
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        for (let i = 0; i < 12; i++) {
+            const absences = monthAbsences[i];
+            let badgeClass = 'bg-success-subtle text-success border-success-subtle';
+            if (absences > 0 && absences <= 2) {
+                badgeClass = 'bg-warning-subtle text-warning border-warning-subtle';
+            } else if (absences > 2) {
+                badgeClass = 'bg-danger-subtle text-danger border-danger-subtle';
+            }
+        %>
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <div class="card border-0 bg-white-glass rounded-4 shadow-sm p-3 h-100 d-flex flex-column justify-content-between transition-all hero-card">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold text-dark mb-0"><%= monthNames[i] %></h5>
+                            <span class="badge border <%= badgeClass %> rounded-pill px-2.5 py-1 fw-bold small">
+                                <%= absences %> Absent
+                            </span>
+                        </div>
+                        <p class="small text-muted mb-0">
+                            <%= absences === 0 ? 'Perfect record maintained.' : `Absence logged on ${absences} session day${absences > 1 ? 's' : ''}.` %>
+                        </p>
+                    </div>
+                    <div class="mt-4">
+                        <a href="/students/<%= student._id %>/history/<%= currentYear %>/<%= i %>?subject=<%= encodeURIComponent(subject) %>" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1.5 fw-semibold transition-all w-100 text-center">
+                            View Details ➔
+                        </a>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<script>
+    // Live ticking clock in IST timezone
+    function updateClock() {
+        const options = {
+            timeZone: 'Asia/Kolkata',
+            hour12: true,
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+        const formatter = new Intl.DateTimeFormat('en-IN', options);
+        const clockEl = document.getElementById('current-time-ist');
+        if (clockEl) {
+            clockEl.textContent = formatter.format(new Date());
+        }
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+</script>

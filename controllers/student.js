@@ -4,6 +4,9 @@
  */
 
 const Student = require('../models/student');
+const Attendance = require('../models/attendance');
+const Class = require('../models/class');
+const Teacher = require('../models/teacher');
 const ExpressError = require('../utils/expressError');
 
 // Show class selection dashboard
@@ -124,4 +127,222 @@ module.exports.toggleAttendance = async (req, res) => {
     }
     
     res.json({ success: true, status: student.status });
+};
+
+// Show attendance review/summary for absent students
+module.exports.showAttendanceSummary = async (req, res) => {
+    const { className } = req.params;
+    const allowedClasses = ['5th', '6th', '7th', '8th', '9th', '10th'];
+    if (!allowedClasses.includes(className)) {
+        throw new ExpressError(400, 'Invalid class standard');
+    }
+    
+    // Fetch all students in this class
+    const students = await Student.find({ className }).sort({ serialNo: 1 });
+    
+    // Calculate counts
+    const totalCount = students.length;
+    const presentCount = students.filter(s => s.status === 'Present').length;
+    const absentCount = students.filter(s => s.status === 'Absent' || !s.status).length;
+    
+    // Filter absent students
+    const absentStudents = students.filter(s => s.status === 'Absent' || !s.status);
+    
+    res.render('students/attendanceSummary', {
+        className,
+        totalCount,
+        presentCount,
+        absentCount,
+        absentStudents,
+        title: `Class ${className} Attendance Summary`
+    });
+};
+
+// Send attendance data to admin (save to Attendance collection)
+module.exports.sendAttendanceToAdmin = async (req, res) => {
+    const { className } = req.params;
+    const allowedClasses = ['5th', '6th', '7th', '8th', '9th', '10th'];
+    if (!allowedClasses.includes(className)) {
+        throw new ExpressError(400, 'Invalid class standard');
+    }
+    
+    // Find all students in this class
+    const students = await Student.find({ className });
+    if (students.length === 0) {
+        req.flash('error', `No students found in Class ${className} to record attendance.`);
+        return res.redirect('/students');
+    }
+    
+    // Determine the teacher ID for recording the attendance log
+    let teacherId = req.session.teacherId;
+    if (!teacherId) {
+        // Fallback 1: Assigned teacher of the class
+        const classDoc = await Class.findOne({ className });
+        teacherId = classDoc && classDoc.assignedTeacher;
+    }
+    if (!teacherId) {
+        // Fallback 2: First teacher in the DB (for Admin logins or unassigned classes)
+        const firstTeacher = await Teacher.findOne({});
+        teacherId = firstTeacher && firstTeacher._id;
+    }
+    if (!teacherId) {
+        throw new ExpressError(500, 'No registered teachers found in database to associate with this attendance record.');
+    }
+    
+    // Date boundaries for today (server local day) to avoid duplicates
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+    
+    // Remove previous records for this class standard today to prevent double logging
+    await Attendance.deleteMany({
+        className,
+        date: { $gte: startOfDay, $lte: endOfDay }
+    });
+    
+    const submittedByAdmin = !!req.session.isAdmin;
+    
+    // Insert new attendance log entries for all students
+    const attendanceRecords = students.map(student => ({
+        student: student._id,
+        teacher: teacherId,
+        className,
+        date: new Date(),
+        status: student.status || 'Absent',
+        submittedByAdmin
+    }));
+    
+    await Attendance.insertMany(attendanceRecords);
+    
+    if (req.session.isAdmin) {
+        req.flash('success', `Attendance report for Class ${className} recorded & WhatsApp notifications triggered!`);
+    } else {
+        req.flash('success', `Attendance report for Class ${className} sent to Admin successfully!`);
+    }
+    res.redirect('/students');
+};
+
+// Show history scope selection page (Admin) or redirect to months selection (Teacher)
+module.exports.showHistoryMonths = async (req, res) => {
+    const { id } = req.params;
+    const student = await Student.findById(id);
+    if (!student) {
+        throw new ExpressError(404, 'Student not found');
+    }
+    
+    // Determine teacher's subject if applicable
+    if (req.session.isTeacher) {
+        const teacher = await Teacher.findById(req.session.teacherId);
+        const subjectName = teacher ? teacher.subject : null;
+        if (subjectName) {
+            return res.redirect(`/students/${id}/history/months?subject=${encodeURIComponent(subjectName)}`);
+        }
+    }
+    
+    // If Admin, redirect directly to overall attendance months view
+    res.redirect(`/students/${id}/history/months?subject=all`);
+};
+
+// Show 12-month calendar grid for the selected scope
+module.exports.showHistoryMonthsSelector = async (req, res) => {
+    const { id } = req.params;
+    const student = await Student.findById(id);
+    if (!student) {
+        throw new ExpressError(404, 'Student not found');
+    }
+    
+    // Determine subject filter (default: 'all' or teacher's subject)
+    let subject = req.query.subject || 'all';
+    if (req.session.isTeacher) {
+        const teacher = await Teacher.findById(req.session.teacherId);
+        subject = teacher ? teacher.subject : 'all';
+    }
+    
+    // Build query
+    const query = { student: id };
+    if (subject !== 'all') {
+        const siblingTeachers = await Teacher.find({ subject }).select('_id');
+        const teacherIds = siblingTeachers.map(t => t._id);
+        query.teacher = { $in: teacherIds };
+    }
+    
+    const records = await Attendance.find(query);
+    
+    // Calculate absent days per month for the current year
+    const currentYear = new Date().getFullYear();
+    const monthAbsences = Array(12).fill(0);
+    
+    records.forEach(record => {
+        const recDate = new Date(record.date);
+        if (recDate.getFullYear() === currentYear && record.status === 'Absent') {
+            monthAbsences[recDate.getMonth()]++;
+        }
+    });
+    
+    res.render('students/attendanceHistoryMonths', {
+        student,
+        monthAbsences,
+        currentYear,
+        subject,
+        title: `${student.name} - Attendance Calendar`
+    });
+};
+
+// Show detailed monthly absenteeism log
+module.exports.showHistoryDetail = async (req, res) => {
+    const { id, year, month } = req.params;
+    const student = await Student.findById(id);
+    if (!student) {
+        throw new ExpressError(404, 'Student not found');
+    }
+    
+    const parsedYear = parseInt(year, 10);
+    const parsedMonth = parseInt(month, 10);
+    if (isNaN(parsedYear) || isNaN(parsedMonth) || parsedMonth < 0 || parsedMonth > 11) {
+        throw new ExpressError(400, 'Invalid year or month');
+    }
+    
+    // Determine subject filter
+    let subject = req.query.subject || 'all';
+    if (req.session.isTeacher) {
+        const teacher = await Teacher.findById(req.session.teacherId);
+        subject = teacher ? teacher.subject : 'all';
+    }
+    
+    // Date boundaries
+    const startOfMonth = new Date(parsedYear, parsedMonth, 1, 0, 0, 0, 0);
+    const endOfMonth = new Date(parsedYear, parsedMonth + 1, 0, 23, 59, 59, 999);
+    
+    // Build query
+    const query = {
+        student: id,
+        date: { $gte: startOfMonth, $lte: endOfMonth }
+    };
+    if (subject !== 'all') {
+        const siblingTeachers = await Teacher.find({ subject }).select('_id');
+        const teacherIds = siblingTeachers.map(t => t._id);
+        query.teacher = { $in: teacherIds };
+    }
+    
+    const records = await Attendance.find(query).populate('teacher').sort({ date: 1 });
+    
+    // Calculate stats
+    const totalSessions = records.length;
+    const absentDays = records.filter(r => r.status === 'Absent').length;
+    const presentDays = records.filter(r => r.status === 'Present').length;
+    const absenteeismRate = totalSessions > 0 ? ((absentDays / totalSessions) * 100).toFixed(1) : '0.0';
+    
+    res.render('students/attendanceHistoryDetail', {
+        student,
+        records,
+        year: parsedYear,
+        month: parsedMonth,
+        totalSessions,
+        absentDays,
+        presentDays,
+        absenteeismRate,
+        subject,
+        title: `${student.name} - Monthly Details`
+    });
 };
