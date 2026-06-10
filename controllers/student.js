@@ -203,6 +203,8 @@ module.exports.sendAttendanceToAdmin = async (req, res) => {
     
     const submittedByAdmin = !!req.session.isAdmin;
     
+    const { sendWhatsAppMessage } = require('../utils/whatsapp');
+
     // Insert new attendance log entries for all students
     const attendanceRecords = students.map(student => ({
         student: student._id,
@@ -214,6 +216,30 @@ module.exports.sendAttendanceToAdmin = async (req, res) => {
     }));
     
     await Attendance.insertMany(attendanceRecords);
+    
+    // Trigger WhatsApp notifications for absent students
+    console.log(`\n✓ Attendance saved`);
+    const whatsappPromises = [];
+    for (const record of attendanceRecords) {
+        if (record.status === 'Absent') {
+            const student = students.find(s => s._id.toString() === record.student.toString());
+            if (student && student.parentMobile) {
+                console.log(`✓ Parent number found`);
+                console.log(`✓ Sending WhatsApp notification`);
+                whatsappPromises.push(sendWhatsAppMessage(student.parentMobile, student.name, className));
+            } else {
+                console.warn(`[ATTENDANCE WORKFLOW WARNING] Absent student ${student ? student.name : 'Unknown'} has no parent mobile number on record.`);
+            }
+        }
+    }
+    
+    // Await all WhatsApp messages without crashing the server if they fail
+    try {
+        await Promise.allSettled(whatsappPromises);
+        console.log(`[ATTENDANCE WORKFLOW] WhatsApp delivered (completed processing all absent students).`);
+    } catch (err) {
+        console.error(`[ATTENDANCE WORKFLOW ERROR] API error if failed:`, err);
+    }
     
     if (req.session.isAdmin) {
         req.flash('success', `Attendance report for Class ${className} recorded & WhatsApp notifications triggered!`);
