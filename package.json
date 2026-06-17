@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "node": "22.14.0"
+  },
   "name": "sgc-project",
   "version": "1.0.0",
   "description": "Shri Ganesh Classes Attendance Management System",
@@ -9,9 +12,6 @@
   },
   "author": "Aaryan",
   "license": "ISC",
-  "engines": {
-    "node": "22.14.0"
-  },
   "dependencies": {
     "axios": "^1.17.0",
     "connect-flash": "^0.1.1",

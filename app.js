@@ -45,17 +45,23 @@ app.use(methodOverride('_method'));
 // Database connection URL
 const dbUrl = process.env.ATLASDB_URL || process.env.MONGO_URL;
 
+if (!dbUrl) {
+    console.error("FATAL CONFIG ERROR: Database URL (ATLASDB_URL or MONGO_URL) is not defined in environment variables!");
+    process.exit(1);
+}
+
+const sessionSecret = process.env.SECRET;
+
 // Session Store configuration
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     crypto: {
-        secret: process.env.SECRET,
+        secret: sessionSecret,
     },
     touchAfter: 7 * 24 * 3600 // 7 days in seconds
 });
 
 // Session configuration
-const sessionSecret = process.env.SECRET;
 const sessionConfig = {
     store,
     secret: sessionSecret,
