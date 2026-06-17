@@ -35,18 +35,79 @@ const sendWhatsAppMessage = async (parentNumber, studentName, className) => {
 
         const currentDate = new Date().toLocaleDateString('en-GB');
 
-        const messageBody = `Dear Parent,\n\nThis is to inform you that your child ${studentName} was marked absent from today's class.\n\nClass: ${className}\nDate: ${currentDate}\n\nRegular attendance is important for academic progress.\n\nIf this absence was planned, kindly ignore this notification.\n\nThank you for your cooperation.\n\nShri Ganesh Classes`;
+        const messageBody = `Your child ${studentName} is absent today.
+Class: ${className}
+Date: ${currentDate}
+If this absence was planned, kindly ignore this notification.
+Shri Ganesh Classes
+
+आपला पाल्य ${studentName} आज वर्गात गैरहजर आहे.
+इयत्ता: ${className}
+दिनांक: ${currentDate}
+जर ही गैरहजेरी पूर्वनियोजित असेल तर कृपया या संदेशाकडे दुर्लक्ष करा.
+श्री गणेश क्लासेस
+
+आपका बच्चा ${studentName} आज कक्षा में गैरहाजिर हैं।
+कक्षा: ${className}
+दिनांक: ${currentDate}
+यदि यह गैरहाजिरी पूर्व नियोजित थी, तो कृपया इस संदेश को अनदेखा करें।
+श्री गणेश क्लासेस`;
 
         const url = `https://graph.facebook.com/v23.0/${phoneNumberId}/messages`;
         
-        const payload = {
-            messaging_product: "whatsapp",
-            to: formattedTo,
-            type: "text",
-            text: {
-                body: messageBody
+        const templateName = process.env.WHATSAPP_TEMPLATE_NAME;
+        let payload;
+
+        if (templateName) {
+            // Template message (required to send directly without requiring "hii / start" first)
+            // By default, expects a multilingual template with 9 placeholders (3 languages * 3 variables)
+            let parameters = [
+                { type: "text", text: studentName },
+                { type: "text", text: className },
+                { type: "text", text: currentDate }
+            ];
+
+            const paramsCount = parseInt(process.env.WHATSAPP_TEMPLATE_PARAMS_COUNT || '9', 10);
+            if (paramsCount === 9) {
+                parameters = [
+                    ...parameters,
+                    { type: "text", text: studentName },
+                    { type: "text", text: className },
+                    { type: "text", text: currentDate },
+                    { type: "text", text: studentName },
+                    { type: "text", text: className },
+                    { type: "text", text: currentDate }
+                ];
             }
-        };
+
+            payload = {
+                messaging_product: "whatsapp",
+                to: formattedTo,
+                type: "template",
+                template: {
+                    name: templateName,
+                    language: {
+                        code: process.env.WHATSAPP_TEMPLATE_LANG || 'en_US'
+                    },
+                    components: [
+                        {
+                            type: "body",
+                            parameters: parameters
+                        }
+                    ]
+                }
+            };
+        } else {
+            // Free-form text message (only works if parent initiated chat in last 24 hours)
+            payload = {
+                messaging_product: "whatsapp",
+                to: formattedTo,
+                type: "text",
+                text: {
+                    body: messageBody
+                }
+            };
+        }
 
         const config = {
             headers: {

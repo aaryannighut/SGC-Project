@@ -32,7 +32,10 @@ module.exports.login = async (req, res) => {
     if (cleanUsername === envUsername && cleanPassword === envPassword) {
         req.session.isAdmin = true;
         req.flash('success', 'Successfully logged in as Admin! Welcome back.');
-        res.redirect('/admin/dashboard');
+        req.session.save((err) => {
+            if (err) console.error("Session save error:", err);
+            res.redirect('/admin/dashboard');
+        });
     } else {
         req.flash('error', 'Invalid admin username or password.');
         res.redirect('/admin/login');
@@ -42,8 +45,11 @@ module.exports.login = async (req, res) => {
 // Handle admin logout
 module.exports.logout = (req, res) => {
     req.session.isAdmin = false;
-    req.flash('success', 'Logged out successfully.');
-    res.redirect('/');
+    req.session.save((err) => {
+        if (err) console.error("Session save error:", err);
+        req.flash('success', 'Logged out successfully.');
+        res.redirect('/');
+    });
 };
 
 // Render admin dashboard
@@ -67,7 +73,13 @@ module.exports.dashboard = async (req, res) => {
     for (let className of allowedClasses) {
         const classRecords = todayAttendance.filter(r => r.className === className);
         if (classRecords.length > 0) {
-            const absentCount = classRecords.filter(r => r.status === 'Absent').length;
+            const seenAbsents = new Set();
+            classRecords.forEach(r => {
+                if (r.status === 'Absent' && r.student) {
+                    seenAbsents.add(r.student.toString());
+                }
+            });
+            const absentCount = seenAbsents.size;
             const submittedByAdmin = classRecords.some(r => r.submittedByAdmin === true);
             classAttendanceSummary[className] = {
                 submitted: true,
@@ -111,9 +123,78 @@ module.exports.showClassAbsentees = async (req, res) => {
         date: { $gte: startOfDay, $lte: endOfDay }
     }).populate('student').populate('teacher');
 
+    // Deduplicate records by student ID to handle any concurrent duplicate submissions
+    const uniqueAbsentRecords = [];
+    const seenStudentIds = new Set();
+    for (const record of absentRecords) {
+        if (record.student) {
+            const studentId = record.student._id.toString();
+            if (!seenStudentIds.has(studentId)) {
+                seenStudentIds.add(studentId);
+                uniqueAbsentRecords.push(record);
+            }
+        } else {
+            uniqueAbsentRecords.push(record);
+        }
+    }
+
     res.render('admin/classAbsentees', {
         className,
-        absentRecords,
+        absentRecords: uniqueAbsentRecords,
         title: `Class ${className} Absentees Report - Shri Ganesh Classes`
     });
+};
+
+// Send WhatsApp notifications to parents of absent students for a class standard today
+module.exports.sendWhatsAppToAbsentees = async (req, res) => {
+    const { className } = req.params;
+    const allowedClasses = ['5th', '6th', '7th', '8th', '9th', '10th'];
+    if (!allowedClasses.includes(className)) {
+        throw new ExpressError(400, 'Invalid class standard');
+    }
+
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    // Find all today's absent records for this class standard, populating details
+    const absentRecords = await Attendance.find({
+        className,
+        status: 'Absent',
+        date: { $gte: startOfDay, $lte: endOfDay }
+    }).populate('student');
+
+    if (absentRecords.length === 0) {
+        req.flash('error', `No absent students found today for Class ${className} to notify.`);
+        return res.redirect(`/admin/attendance/class/${className}`);
+    }
+
+    const { sendWhatsAppMessage } = require('../utils/whatsapp');
+    const whatsappPromises = [];
+    const seenStudentIds = new Set();
+
+    for (const record of absentRecords) {
+        if (record.student) {
+            const studentId = record.student._id.toString();
+            if (!seenStudentIds.has(studentId)) {
+                seenStudentIds.add(studentId);
+                if (record.student.parentMobile) {
+                    whatsappPromises.push(sendWhatsAppMessage(record.student.parentMobile, record.student.name, className));
+                } else {
+                    console.warn(`[ADMIN WORKFLOW WARNING] Absent student ${record.student.name} has no parent mobile number on record.`);
+                }
+            }
+        }
+    }
+
+    try {
+        await Promise.allSettled(whatsappPromises);
+        req.flash('success', `WhatsApp notifications triggered for absent students of Class ${className}!`);
+    } catch (err) {
+        console.error(`[ADMIN WORKFLOW ERROR] Error triggering WhatsApp notifications:`, err);
+        req.flash('error', 'Something went wrong while sending WhatsApp notifications.');
+    }
+
+    res.redirect(`/admin/attendance/class/${className}`);
 };

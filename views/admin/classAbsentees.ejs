@@ -55,7 +55,7 @@
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+                <table class="table table-hover align-middle mb-0 responsive-table">
                     <thead class="table-light text-secondary border-bottom">
                         <tr>
                             <th class="ps-4 py-3" style="width: 100px;">Roll No</th>
@@ -69,10 +69,10 @@
                             <% for (let record of absentRecords) { %>
                                 <% if (record.student) { %>
                                     <tr class="transition-all">
-                                        <td class="ps-4 fw-semibold text-dark"><%= record.student.serialNo %></td>
-                                        <td class="fw-bold text-danger"><%= record.student.name %></td>
-                                        <td class="text-secondary"><%= record.student.parentName %></td>
-                                        <td class="pe-4 fw-medium text-muted">
+                                        <td data-label="Roll No" class="ps-4 fw-semibold text-dark"><%= record.student.serialNo %></td>
+                                        <td data-label="Student Name" class="fw-bold text-danger"><%= record.student.name %></td>
+                                        <td data-label="Parent Name" class="text-secondary"><%= record.student.parentName %></td>
+                                        <td data-label="Parent Contact" class="pe-4 fw-medium text-muted phone-cell">
                                             📞 <%= record.student.parentMobile %>
                                         </td>
                                     </tr>
@@ -95,11 +95,11 @@
 
     <!-- Send WhatsApp Notifications Section -->
     <% if (absentRecords && absentRecords.length > 0) { %>
-        <div class="d-flex justify-content-end mt-4">
-            <button type="button" class="btn btn-lg rounded-pill fw-bold shadow-sm px-5 py-3 border-0 text-white transition-all" style="background-color: #25D366;" id="whatsapp-send-btn" onclick="alert('WhatsApp Integration: This button is ready to be linked to the notification API.');">
+        <form action="/admin/attendance/class/<%= className %>/send-whatsapp" method="POST" class="d-flex justify-content-end mt-4" onsubmit="const btn = this.querySelector('button[type=submit]'); btn.disabled = true; btn.innerHTML = '💬 Sending...';">
+            <button type="submit" class="btn btn-lg rounded-pill fw-bold shadow-sm px-5 py-3 border-0 text-white transition-all" style="background-color: #25D366;" id="whatsapp-send-btn">
                 💬 Send WhatsApp Notification to Parents
             </button>
-        </div>
+        </form>
     <% } %>
 </div>
 

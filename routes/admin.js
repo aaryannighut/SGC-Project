@@ -22,5 +22,6 @@ router.get('/dashboard', isAdminLoggedIn, wrapAsync(adminController.dashboard));
 
 // /admin/attendance/class/:className
 router.get('/attendance/class/:className', isAdminLoggedIn, wrapAsync(adminController.showClassAbsentees));
+router.post('/attendance/class/:className/send-whatsapp', isAdminLoggedIn, wrapAsync(adminController.sendWhatsAppToAbsentees));
 
 module.exports = router;

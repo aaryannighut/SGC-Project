@@ -34,7 +34,7 @@
     <div class="card border-0 rounded-4 shadow-sm bg-white-glass overflow-hidden">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+                <table class="table table-hover align-middle mb-0 responsive-table">
                     <thead class="table-light text-secondary border-bottom">
                         <tr>
                             <th class="ps-4 py-3">S.No.</th>
@@ -50,8 +50,8 @@
                         <% if (students && students.length > 0) { %>
                             <% for (let student of students) { %>
                                 <tr class="transition-all">
-                                    <td class="ps-4 fw-semibold text-dark"><%= student.serialNo %></td>
-                                    <td>
+                                    <td data-label="S.No." class="ps-4 fw-semibold text-dark"><%= student.serialNo %></td>
+                                    <td data-label="Presentee">
                                         <div class="form-check form-switch m-0 d-inline-block">
                                             <input class="form-check-input attendance-toggle transition-all" type="checkbox" role="switch" id="switch-<%= student._id %>" data-id="<%= student._id %>" <%= student.status === 'Present' ? 'checked' : '' %> style="cursor: pointer; width: 2.2em; height: 1.1em;">
                                             <label class="form-check-label ms-2 small fw-bold <%= student.status === 'Present' ? 'text-success' : 'text-muted' %>" id="label-<%= student._id %>" for="switch-<%= student._id %>" style="min-width: 50px;">
@@ -59,18 +59,18 @@
                                             </label>
                                         </div>
                                     </td>
-                                    <td class="fw-semibold text-dark"><%= student.name %></td>
-                                    <td>
+                                    <td data-label="Name" class="fw-semibold text-dark"><%= student.name %></td>
+                                    <td data-label="Class">
                                         <span class="badge bg-primary-subtle text-primary rounded-pill px-2.5 py-1.5 fw-semibold"><%= student.className %></span>
                                     </td>
-                                    <td><%= student.parentName %></td>
-                                    <td>
+                                    <td data-label="Parent Name"><%= student.parentName %></td>
+                                    <td data-label="Parent Mobile" class="phone-cell">
                                         <a href="tel:<%= student.parentMobile %>" class="text-decoration-none text-muted small fw-medium">
                                             📞 <%= student.parentMobile %>
                                         </a>
                                     </td>
-                                    <td class="pe-4 text-end">
-                                        <div class="d-flex justify-content-end gap-2">
+                                    <td data-label="Actions" class="pe-4 text-end">
+                                        <div class="d-flex justify-content-end gap-2 responsive-actions">
                                             <a href="/students/<%= student._id %>/history" class="btn btn-sm btn-outline-dark px-3 rounded-pill transition-all fw-semibold">
                                                 📊 History
                                             </a>

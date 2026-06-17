@@ -11,10 +11,10 @@ const Teacher = require('../models/teacher');
 const Class = require('../models/class');
 const { sampleStudents, sampleTeachers } = require('./data');
 
-const dbUrl = process.env.MONGO_URL;
+const dbUrl = process.env.ATLASDB_URL || process.env.MONGO_URL;
 
 if (!dbUrl) {
-    console.error("Error: MONGO_URL environment variable is not defined in .env file.");
+    console.error("Error: Neither ATLASDB_URL nor MONGO_URL environment variable is defined in .env file.");
     process.exit(1);
 }
 

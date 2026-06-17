@@ -59,7 +59,7 @@
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table align-middle mb-0">
+                <table class="table align-middle mb-0 responsive-table">
                     <thead class="table-light text-secondary border-bottom">
                         <tr>
                             <th class="ps-4 py-3" style="width: 100px;">Roll No</th>
@@ -72,10 +72,10 @@
                         <% if (absentStudents && absentStudents.length > 0) { %>
                             <% for (let student of absentStudents) { %>
                                 <tr class="border-bottom-0">
-                                    <td class="ps-4 fw-semibold text-dark"><%= student.serialNo %></td>
-                                    <td class="fw-bold text-danger"><%= student.name %></td>
-                                    <td class="text-secondary"><%= student.parentName %></td>
-                                    <td class="pe-4">
+                                    <td data-label="Roll No" class="ps-4 fw-semibold text-dark"><%= student.serialNo %></td>
+                                    <td data-label="Student Name" class="fw-bold text-danger"><%= student.name %></td>
+                                    <td data-label="Parent Name" class="text-secondary"><%= student.parentName %></td>
+                                    <td data-label="Parent Mobile" class="pe-4 phone-cell">
                                         <a href="tel:<%= student.parentMobile %>" class="text-decoration-none text-muted small fw-medium">
                                             📞 <%= student.parentMobile %>
                                         </a>
@@ -98,7 +98,7 @@
     </div>
 
     <!-- Submit Form -->
-    <form action="/students/class/<%= className %>/send-to-admin" method="POST" class="d-flex justify-content-end mt-4">
+    <form action="/students/class/<%= className %>/send-to-admin" method="POST" class="d-flex justify-content-end mt-4" onsubmit="const btn = this.querySelector('button[type=submit]'); btn.disabled = true; btn.innerHTML = btn.id === 'whatsapp-send-btn' ? '💬 Sending...' : '📲 Sending...';">
         <% if (isAdmin) { %>
             <button type="submit" class="btn btn-lg rounded-pill fw-bold shadow-sm px-5 py-3 border-0 text-white transition-all" style="background-color: #25D366;" id="whatsapp-send-btn">
                 💬 Record & Send WhatsApp Notifications
