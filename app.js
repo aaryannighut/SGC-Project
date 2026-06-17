@@ -24,6 +24,7 @@ const classRoutes = require('./routes/class');
 const adminRoutes = require('./routes/admin');
 const ExpressError = require('./utils/expressError');
 const { isAdminLoggedIn, isLoggedIn } = require('./middleware');
+const { formatMongoUri } = require('./utils/db');
 
 const app = express();
 
@@ -43,7 +44,7 @@ app.use(express.json());
 app.use(methodOverride('_method'));
 
 // Database connection URL
-const dbUrl = process.env.ATLASDB_URL || process.env.MONGO_URL;
+const dbUrl = formatMongoUri(process.env.ATLASDB_URL || process.env.MONGO_URL);
 
 if (!dbUrl) {
     console.error("FATAL CONFIG ERROR: Database URL (ATLASDB_URL or MONGO_URL) is not defined in environment variables!");
