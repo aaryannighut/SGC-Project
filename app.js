@@ -45,13 +45,19 @@ app.use(methodOverride('_method'));
 // Database connection URL
 const dbUrl = process.env.ATLASDB_URL || process.env.MONGO_URL;
 
+// Session Store configuration
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    crypto: {
+        secret: process.env.SECRET,
+    },
+    touchAfter: 7 * 24 * 3600 // 7 days in seconds
+});
+
 // Session configuration
-const sessionSecret = process.env.SESSION_SECRET || 'shriganeshsessionsecretkeysgc';
+const sessionSecret = process.env.SECRET;
 const sessionConfig = {
-    store: MongoStore.create({
-        mongoUrl: dbUrl,
-        touchAfter: 24 * 3600
-    }),
+    store,
     secret: sessionSecret,
     resave: false,
     saveUninitialized: true,
