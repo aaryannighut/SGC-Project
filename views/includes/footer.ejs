@@ -1,5 +1,8 @@
 <!-- views/includes/footer.ejs -->
-<footer class="footer mt-auto py-5 bg-gradient-nav text-light border-top border-secondary border-opacity-25">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Desktop Footer (Hidden on Mobile) -->
+<footer class="footer mt-auto py-5 bg-gradient-nav text-light border-top border-secondary border-opacity-25 d-none d-md-block">
     <div class="container">
         <div class="row gy-4 text-center text-md-start">
             <!-- Left Section -->
@@ -44,11 +47,169 @@
     </div>
 </footer>
 
+<!-- Mobile Footer (Hidden on Desktop) -->
+<footer class="footer mt-auto py-5 bg-gradient-nav text-light border-top border-secondary border-opacity-25 d-block d-md-none position-relative overflow-visible">
+    
+    <!-- Floating Back to Top -->
+    <a href="#" class="back-to-top position-absolute d-flex align-items-center justify-content-center text-dark text-decoration-none shadow" aria-label="Back to Top">
+        <i class="fa-solid fa-arrow-up"></i>
+    </a>
+
+    <div class="container text-center px-4">
+        
+        <!-- Branding Section -->
+        <div class="mb-4">
+            <h4 class="fw-bold tracking-tight text-golden mb-2 footer-mobile-title">
+                <i class="fa-solid fa-school me-2"></i>Shri Ganesh Classes
+            </h4>
+            <p class="text-white-50 mb-0 mobile-footer-text">Empowering Students Through Quality Education</p>
+        </div>
+        
+        <hr class="mobile-footer-divider">
+        
+        <!-- Quick Links Section -->
+        <div class="mb-4">
+            <h5 class="fw-bold tracking-tight text-golden mb-3 footer-mobile-title">
+                <i class="fa-solid fa-link me-2"></i>Quick Links
+            </h5>
+            <ul class="list-unstyled mb-0 d-flex flex-column gap-3">
+                <li><a href="/admin/dashboard" class="text-white-50 text-decoration-none footer-link-mobile"><i class="fa-solid fa-house me-2 mobile-icon"></i>Dashboard</a></li>
+                <li><a href="/students" class="text-white-50 text-decoration-none footer-link-mobile"><i class="fa-solid fa-user-graduate me-2 mobile-icon"></i>Students</a></li>
+                <li><a href="/teachers" class="text-white-50 text-decoration-none footer-link-mobile"><i class="fa-solid fa-chalkboard-user me-2 mobile-icon"></i>Teachers</a></li>
+                <li><a href="/classes" class="text-white-50 text-decoration-none footer-link-mobile"><i class="fa-solid fa-building-columns me-2 mobile-icon"></i>Classes</a></li>
+                <li><a href="/attendance" class="text-white-50 text-decoration-none footer-link-mobile"><i class="fa-solid fa-clipboard-check me-2 mobile-icon"></i>Attendance</a></li>
+            </ul>
+        </div>
+        
+        <hr class="mobile-footer-divider">
+        
+        <!-- Contact Information Section -->
+        <div class="mb-4">
+            <h5 class="fw-bold tracking-tight text-golden mb-3 footer-mobile-title">
+                <i class="fa-solid fa-headset me-2"></i>Contact Information
+            </h5>
+            <ul class="list-unstyled text-white-50 mb-0 d-flex flex-column gap-3 align-items-center">
+                <li class="d-flex align-items-center mobile-footer-text">
+                    <i class="fa-solid fa-phone text-golden me-3 width-icon"></i> 
+                    <span>+91 XXXXXXXXXX</span>
+                </li>
+                <li class="d-flex align-items-center mobile-footer-text">
+                    <i class="fa-solid fa-envelope text-golden me-3 width-icon"></i> 
+                    <a href="mailto:contact@shriganeshclasses.com" class="text-white-50 text-decoration-none footer-link-mobile">contact@shriganeshclasses.com</a>
+                </li>
+                <li class="d-flex align-items-center mobile-footer-text">
+                    <i class="fa-solid fa-location-dot text-golden me-3 width-icon"></i> 
+                    <span>Mumbai, Maharashtra</span>
+                </li>
+            </ul>
+        </div>
+        
+        <hr class="mobile-footer-divider">
+
+        <!-- Social Media Icons -->
+        <div class="mb-4 pt-2">
+            <div class="d-flex justify-content-center gap-3">
+                <a href="#" class="social-icon-btn"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" class="social-icon-btn"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="social-icon-btn"><i class="fa-brands fa-whatsapp"></i></a>
+                <a href="#" class="social-icon-btn"><i class="fa-brands fa-linkedin-in"></i></a>
+            </div>
+        </div>
+        
+        <!-- Copyright Section -->
+        <div class="row text-center mt-2">
+            <div class="col-12">
+                <p class="mb-0 text-white-50 copyright-text">
+                    &copy; 2026 Shri Ganesh Classes.<br>All Rights Reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
 <style>
+/* Utilities */
+.text-golden {
+    color: #d99100 !important;
+}
+
+/* Desktop specific footer hover */
 .footer-link {
     transition: color 0.2s ease;
 }
 .footer-link:hover {
     color: #d99100 !important;
+}
+
+/* Mobile Specific Styling */
+.footer-mobile-title {
+    font-size: 1.25rem;
+    letter-spacing: 0.5px;
+}
+.mobile-footer-text, .footer-link-mobile {
+    font-size: 0.95rem;
+    line-height: 1.4;
+    transition: color 0.2s ease;
+}
+.footer-link-mobile:hover {
+    color: #d99100 !important;
+}
+.mobile-icon {
+    width: 20px;
+    text-align: center;
+    color: #d99100;
+}
+.width-icon {
+    width: 20px;
+    text-align: center;
+}
+.mobile-footer-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 2rem auto;
+    width: 70%;
+}
+.social-icon-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.08); /* slightly higher contrast */
+    color: rgba(255, 255, 255, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 1.15rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.social-icon-btn:hover {
+    background-color: #d99100;
+    color: #111;
+    transform: translateY(-4px);
+    border-color: #d99100;
+    box-shadow: 0 5px 15px rgba(217, 145, 0, 0.4);
+}
+.copyright-text {
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    line-height: 1.5;
+}
+
+/* Back to top button */
+.back-to-top {
+    top: -22px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    background-color: #d99100;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    z-index: 100;
+    transition: all 0.3s ease;
+}
+.back-to-top:hover {
+    background-color: #e6a210;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(217, 145, 0, 0.4) !important;
 }
 </style>
