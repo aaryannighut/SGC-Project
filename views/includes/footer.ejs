@@ -1,8 +1,54 @@
 <!-- views/includes/footer.ejs -->
-<footer class="footer mt-auto py-4 bg-dark text-light border-top border-secondary border-opacity-25">
-    <div class="container text-center">
-        <p class="mb-0 text-muted fs-6">
-            &copy; <%= new Date().getFullYear() %> Shri Ganesh Classes - Smart Academy Suite. All rights reserved.
-        </p>
+<footer class="footer mt-auto py-5 bg-gradient-nav text-light border-top border-secondary border-opacity-25">
+    <div class="container">
+        <div class="row gy-4 text-center text-md-start">
+            <!-- Left Section -->
+            <div class="col-12 col-md-4">
+                <h5 class="fw-bold tracking-tight mb-3 text-warning">Shri Ganesh Classes</h5>
+                <p class="text-white-50 mb-0">Empowering Students Through Quality Education</p>
+            </div>
+            
+            <!-- Center Section: Quick Links -->
+            <div class="col-12 col-md-4">
+                <h5 class="fw-bold tracking-tight mb-3 text-warning">Quick Links</h5>
+                <ul class="list-unstyled mb-0 d-flex flex-column gap-2">
+                    <li><a href="/admin/dashboard" class="text-white-50 text-decoration-none footer-link">Dashboard</a></li>
+                    <li><a href="/students" class="text-white-50 text-decoration-none footer-link">Students</a></li>
+                    <li><a href="/teachers" class="text-white-50 text-decoration-none footer-link">Teachers</a></li>
+                    <li><a href="/classes" class="text-white-50 text-decoration-none footer-link">Classes</a></li>
+                    <li><a href="/attendance" class="text-white-50 text-decoration-none footer-link">Attendance</a></li>
+                </ul>
+            </div>
+            
+            <!-- Right Section: Contact Information -->
+            <div class="col-12 col-md-4">
+                <h5 class="fw-bold tracking-tight mb-3 text-warning">Contact Information</h5>
+                <ul class="list-unstyled text-white-50 mb-0 d-flex flex-column gap-2">
+                    <li><span class="fw-semibold">Phone:</span> +91 XXXXXXXXXX</li>
+                    <li><span class="fw-semibold">Email:</span> <a href="mailto:contact@shriganeshclasses.com" class="text-white-50 text-decoration-none footer-link">contact@shriganeshclasses.com</a></li>
+                    <li><span class="fw-semibold">Location:</span> Mumbai, Maharashtra</li>
+                </ul>
+            </div>
+        </div>
+        
+        <hr class="border-secondary border-opacity-25 my-4">
+        
+        <!-- Bottom Section -->
+        <div class="row text-center">
+            <div class="col-12">
+                <p class="mb-0 text-white-50 fs-6">
+                    &copy; 2026 Shri Ganesh Classes. All Rights Reserved.
+                </p>
+            </div>
+        </div>
     </div>
 </footer>
+
+<style>
+.footer-link {
+    transition: color 0.2s ease;
+}
+.footer-link:hover {
+    color: #d99100 !important;
+}
+</style>

@@ -16,6 +16,7 @@ body {
     font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: #212529;
     min-height: 100vh;
+    padding-top: 76px; /* Offset for fixed-top navbar */
 }
 
 /* Page Background */
@@ -290,3 +291,60 @@ body {
     }
 }
 
+/* --- Mobile Navigation Overrides --- */
+@media (max-width: 991.98px) {
+    /* Prevent horizontal scrolling on all mobile devices */
+    body {
+        overflow-x: hidden;
+    }
+    
+    /* Ensure height adjusts automatically, scroll only the menu */
+    .navbar-collapse {
+        margin-top: 0.5rem;
+        /* Start with transparent border to prevent layout shift */
+        border-top: 1px solid transparent; 
+        transition: max-height 0.35s ease, border-top 0.35s ease;
+    }
+
+    .navbar-collapse.show,
+    .navbar-collapse.collapsing {
+        max-height: calc(100vh - 75px);
+    }
+
+    .navbar-collapse.show {
+        overflow-y: auto;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Add padding top and bottom inside the mobile menu */
+    .navbar-nav {
+        padding-top: 1rem;
+        padding-bottom: 2rem;
+        gap: 1.25rem !important; /* Equal spacing between every navigation item */
+    }
+    
+    /* Center all navigation links */
+    .navbar-nav .nav-item {
+        width: 100%;
+        text-align: center;
+    }
+
+    .navbar-nav .nav-link {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    /* Logout button positioning */
+    .navbar-nav .logout-item {
+        margin-top: 2rem !important; /* Push it to the bottom with proper margin */
+        padding-bottom: 1rem !important; /* Prevent touching the next section */
+    }
+    
+    /* Logout button size for mobile */
+    .navbar-nav .logout-item .nav-link {
+        width: 75% !important;
+        max-width: 250px;
+        margin: 0 auto;
+    }
+}

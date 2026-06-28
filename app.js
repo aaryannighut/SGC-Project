@@ -51,7 +51,12 @@ if (!dbUrl) {
     process.exit(1);
 }
 
-const sessionSecret = process.env.SECRET;
+const sessionSecret = process.env.SESSION_SECRET;
+
+if (!sessionSecret) {
+    console.error("FATAL CONFIG ERROR: SESSION_SECRET is not defined in environment variables!");
+    process.exit(1);
+}
 
 // Session Store configuration
 const store = MongoStore.create({
@@ -67,7 +72,7 @@ const sessionConfig = {
     store,
     secret: sessionSecret,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     rolling: true,
     cookie: {
         httpOnly: true,
