@@ -148,10 +148,16 @@
                                 <input type="number" class="form-control rounded-3" id="totalFee-<%= student._id %>" name="student[totalFee]" value="<%= student.totalFee || 0 %>" min="0" oninput="calculatePending('<%= student._id %>')" required>
                             </div>
 
-                            <!-- Received Fee -->
+                            <!-- Previously Paid Fee -->
                             <div class="mb-3">
-                                <label for="receivedFee-<%= student._id %>" class="form-label fw-semibold">Received Fee (Rs.)</label>
-                                <input type="number" class="form-control rounded-3" id="receivedFee-<%= student._id %>" name="student[receivedFee]" value="<%= student.receivedFee || 0 %>" min="0" oninput="calculatePending('<%= student._id %>')" required>
+                                <label for="prevReceivedFee-<%= student._id %>" class="form-label fw-semibold text-muted">Previously Paid Fee (Rs.)</label>
+                                <input type="number" class="form-control rounded-3 bg-light text-muted" id="prevReceivedFee-<%= student._id %>" value="<%= student.receivedFee || 0 %>" readonly>
+                            </div>
+
+                            <!-- Pay Installment -->
+                            <div class="mb-3">
+                                <label for="currentPayment-<%= student._id %>" class="form-label fw-semibold text-success">Pay Installment / Current Paid Amount (Rs.)</label>
+                                <input type="number" class="form-control rounded-3 border-success text-success fw-semibold" id="currentPayment-<%= student._id %>" name="student[currentPayment]" value="0" oninput="calculatePending('<%= student._id %>')" required>
                             </div>
 
                             <!-- Pending Fee -->
@@ -236,12 +242,14 @@
 <script>
     function calculatePending(studentId) {
         const totalInput = document.getElementById(`totalFee-${studentId}`);
-        const receivedInput = document.getElementById(`receivedFee-${studentId}`);
+        const prevReceivedInput = document.getElementById(`prevReceivedFee-${studentId}`);
+        const currentPaymentInput = document.getElementById(`currentPayment-${studentId}`);
         const pendingInput = document.getElementById(`pendingFee-${studentId}`);
-        if (totalInput && receivedInput && pendingInput) {
+        if (totalInput && prevReceivedInput && currentPaymentInput && pendingInput) {
             const total = parseFloat(totalInput.value) || 0;
-            const received = parseFloat(receivedInput.value) || 0;
-            pendingInput.value = Math.max(0, total - received);
+            const prevReceived = parseFloat(prevReceivedInput.value) || 0;
+            const currentPayment = parseFloat(currentPaymentInput.value) || 0;
+            pendingInput.value = Math.max(0, total - (prevReceived + currentPayment));
         }
     }
 </script>

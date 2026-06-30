@@ -407,20 +407,22 @@ module.exports.updateStudentFees = async (req, res) => {
         throw new ExpressError(400, 'Invalid Student Fee Data');
     }
     
-    const { totalFee, receivedFee } = req.body.student;
-    const parsedTotal = parseFloat(totalFee) || 0;
-    const parsedReceived = parseFloat(receivedFee) || 0;
-    const parsedPending = parsedTotal - parsedReceived;
-    
-    const student = await Student.findByIdAndUpdate(id, {
-        totalFee: parsedTotal,
-        receivedFee: parsedReceived,
-        pendingFee: parsedPending
-    }, { new: true });
-    
+    const student = await Student.findById(id);
     if (!student) {
         throw new ExpressError(404, 'Student not found');
     }
+    
+    const { totalFee, currentPayment } = req.body.student;
+    const parsedTotal = parseFloat(totalFee) || 0;
+    const parsedCurrentPayment = parseFloat(currentPayment) || 0;
+    
+    const newReceivedFee = student.receivedFee + parsedCurrentPayment;
+    const parsedPending = Math.max(0, parsedTotal - newReceivedFee);
+    
+    student.totalFee = parsedTotal;
+    student.receivedFee = newReceivedFee;
+    student.pendingFee = parsedPending;
+    await student.save();
     
     req.flash('success', `Fees updated for ${student.name} successfully.`);
     res.redirect(`/students/class/${student.className}`);
