@@ -76,11 +76,11 @@
                         <div class="card border-0 bg-light rounded-3 p-3 h-100 d-flex flex-column justify-content-between transition-all hero-card">
                             <div>
                                 <h5 class="fw-bold text-dark mb-2">Student Directory</h5>
-                                <p class="small text-muted mb-0">View all student profiles, modify records, enroll new students, and search coordinates.</p>
+                                <p class="small text-muted mb-0">Select a class to view, add and manage student records, attendance, and fee details.</p>
                             </div>
                             <div class="mt-4 d-flex justify-content-between align-items-center">
                                 <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-1.5 fw-bold"><%= studentCount %> Registered</span>
-                                <a href="/students" class="btn btn-sm btn-gradient-blue rounded-pill px-3 py-1.5 fw-semibold transition-all">Go to Registry ➔</a>
+                                <a href="/students" class="btn btn-sm btn-gradient-blue rounded-pill px-3 py-1.5 fw-semibold transition-all">Go to Directory ➔</a>
                             </div>
                         </div>
                     </div>
@@ -92,7 +92,7 @@
                             </div>
                             <div class="mt-4 d-flex justify-content-between align-items-center">
                                 <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-1.5 fw-bold"><%= teacherCount %> Instructors</span>
-                                <a href="/teachers" class="btn btn-sm btn-gradient-blue rounded-pill px-3 py-1.5 fw-semibold transition-all">Go to Registry ➔</a>
+                                <a href="/teachers" class="btn btn-sm btn-gradient-blue rounded-pill px-3 py-1.5 fw-semibold transition-all">Go to Directory ➔</a>
                             </div>
                         </div>
                     </div>
@@ -146,7 +146,7 @@
                                                 Attendance has been successfully sent by the class coordinator.
                                             <% } %>
                                         <% } else { %>
-                                            Today's registry has not been submitted by the teacher yet.
+                                            Today's attendance has not been submitted by the teacher yet.
                                         <% } %>
                                     </p>
                                 </div>
