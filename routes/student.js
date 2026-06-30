@@ -24,10 +24,12 @@ router.post('/class/:className', isAdmin, wrapAsync(studentController.createStud
 router.get('/class/:className/new', isAdmin, wrapAsync(studentController.renderNewForm));
 router.get('/class/:className/attendance-summary', wrapAsync(studentController.showAttendanceSummary));
 router.post('/class/:className/send-to-admin', wrapAsync(studentController.sendAttendanceToAdmin));
+router.post('/class/:className/fees/notify', isAdmin, wrapAsync(studentController.notifyPendingFees));
 
 // /students/:id
 router.get('/:id', wrapAsync(studentController.showStudent));
 router.put('/:id', isAdmin, wrapAsync(studentController.updateStudent));
+router.put('/:id/fees', isAdmin, wrapAsync(studentController.updateStudentFees));
 router.delete('/:id', isAdmin, wrapAsync(studentController.deleteStudent));
 router.get('/:id/history', wrapAsync(studentController.showHistoryMonths));
 router.get('/:id/history/months', wrapAsync(studentController.showHistoryMonthsSelector));

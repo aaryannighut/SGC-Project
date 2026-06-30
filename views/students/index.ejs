@@ -13,9 +13,14 @@
             <p class="text-muted mb-0">Manage student records for the active <%= className %> standard section</p>
         </div>
         <% if (isAdmin) { %>
-        <a href="/students/class/<%= className %>/new" class="btn btn-primary px-4 py-2.5 rounded-pill fw-bold btn-gradient-blue shadow transition-all">
-            <span class="me-1">➕</span> Add New Student
-        </a>
+        <div class="d-flex gap-2">
+            <a href="/students/class/<%= className %>/new" class="btn btn-primary px-4 py-2.5 rounded-pill fw-bold btn-gradient-blue shadow transition-all">
+                <span class="me-1">➕</span> Add New Student
+            </a>
+            <button type="button" class="btn btn-outline-primary px-4 py-2.5 rounded-pill fw-bold transition-all shadow-sm" data-bs-toggle="modal" data-bs-target="#manageFeesModal">
+                💰 Fees Section
+            </button>
+        </div>
         <% } %>
     </div>
 
@@ -74,10 +79,10 @@
                                             <a href="/students/<%= student._id %>/history" class="btn btn-sm btn-outline-dark px-3 rounded-pill transition-all fw-semibold">
                                                 📊 History
                                             </a>
-                                            <a href="/students/<%= student._id %>" class="btn btn-sm btn-outline-primary px-3 rounded-pill transition-all fw-semibold">
-                                                👁️ View
-                                            </a>
                                             <% if (isAdmin) { %>
+                                            <button type="button" class="btn btn-sm btn-outline-primary px-3 rounded-pill transition-all fw-semibold" data-bs-toggle="modal" data-bs-target="#feesModal-<%= student._id %>">
+                                                💰 Fees
+                                            </button>
                                             <a href="/students/<%= student._id %>/edit" class="btn btn-sm btn-outline-secondary px-3 rounded-pill transition-all fw-semibold">
                                                 ✏️ Edit
                                             </a>
@@ -86,6 +91,10 @@
                                                     🗑️ Delete
                                                 </button>
                                             </form>
+                                            <% } else { %>
+                                            <a href="/students/<%= student._id %>" class="btn btn-sm btn-outline-primary px-3 rounded-pill transition-all fw-semibold">
+                                                👁️ View
+                                            </a>
                                             <% } %>
                                         </div>
                                     </td>
@@ -115,6 +124,127 @@
         </a>
     </div>
 </div>
+
+<% if (isAdmin) { %>
+    <!-- Individual Fees Modals -->
+    <% for (let student of students) { %>
+        <div class="modal fade" id="feesModal-<%= student._id %>" tabindex="-1" aria-labelledby="feesModalLabel-<%= student._id %>" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-4 border-0 shadow">
+                    <div class="modal-header border-bottom-0">
+                        <h5 class="modal-title fw-bold text-dark" id="feesModalLabel-<%= student._id %>">💰 Student Fees Structure</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="/students/<%= student._id %>/fees?_method=PUT" method="POST" class="needs-validation" novalidate>
+                        <div class="modal-body py-3">
+                            <div class="mb-3 text-center">
+                                <h4 class="fw-bold text-gradient-purple-blue mb-1"><%= student.name %></h4>
+                                <p class="text-muted small">Class <%= student.className %> - Serial No. <%= student.serialNo %></p>
+                            </div>
+                            
+                            <!-- Total Fee -->
+                            <div class="mb-3">
+                                <label for="totalFee-<%= student._id %>" class="form-label fw-semibold">Total Fee (Rs.)</label>
+                                <input type="number" class="form-control rounded-3" id="totalFee-<%= student._id %>" name="student[totalFee]" value="<%= student.totalFee || 0 %>" min="0" oninput="calculatePending('<%= student._id %>')" required>
+                            </div>
+
+                            <!-- Received Fee -->
+                            <div class="mb-3">
+                                <label for="receivedFee-<%= student._id %>" class="form-label fw-semibold">Received Fee (Rs.)</label>
+                                <input type="number" class="form-control rounded-3" id="receivedFee-<%= student._id %>" name="student[receivedFee]" value="<%= student.receivedFee || 0 %>" min="0" oninput="calculatePending('<%= student._id %>')" required>
+                            </div>
+
+                            <!-- Pending Fee -->
+                            <div class="mb-3">
+                                <label for="pendingFee-<%= student._id %>" class="form-label fw-semibold text-danger">Pending Fee (Rs.)</label>
+                                <input type="number" class="form-control rounded-3 bg-light text-danger fw-bold" id="pendingFee-<%= student._id %>" name="student[pendingFee]" value="<%= student.pendingFee || 0 %>" readonly>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-top-0 pt-0">
+                            <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold btn-gradient-blue border-0">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+    <!-- Manage Class Fees Modal -->
+    <div class="modal fade" id="manageFeesModal" tabindex="-1" aria-labelledby="manageFeesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title fw-bold text-dark" id="manageFeesModalLabel">💰 Class <%= className %> Fees Section</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-3">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light text-secondary border-bottom">
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Student Name</th>
+                                    <th>Total Fee (Rs.)</th>
+                                    <th>Received Fee (Rs.)</th>
+                                    <th class="text-danger">Pending Fee (Rs.)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (students && students.length > 0) { %>
+                                    <% for (let student of students) { %>
+                                        <tr>
+                                            <td class="fw-semibold text-dark"><%= student.serialNo %></td>
+                                            <td class="fw-semibold text-dark"><%= student.name %></td>
+                                            <td>Rs. <%= student.totalFee || 0 %></td>
+                                            <td class="text-success fw-medium">Rs. <%= student.receivedFee || 0 %></td>
+                                            <td class="text-danger fw-bold">Rs. <%= student.pendingFee || 0 %></td>
+                                        </tr>
+                                    <% } %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="5" class="text-center py-4 text-muted">No students in registry to display.</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <% if (students && students.some(s => s.pendingFee > 0)) { %>
+                        <hr class="my-4 text-secondary opacity-25">
+                        
+                        <!-- Send WhatsApp Notification Section -->
+                        <div class="p-3 bg-light rounded-3 text-center">
+                            <h6 class="fw-bold text-dark mb-2">📢 Send WhatsApp Fee Reminders</h6>
+                            <p class="small text-muted mb-3">Send WhatsApp reminders to all parents of students with pending fees for Class <%= className %>.</p>
+                            <form action="/students/class/<%= className %>/fees/notify" method="POST" onsubmit="return confirm('Are you sure you want to send WhatsApp fee notifications to all parents with pending fees?');">
+                                <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold btn-gradient-blue border-0 shadow transition-all">
+                                    💬 Send WhatsApp Notifications
+                                </button>
+                            </form>
+                        </div>
+                    <% } %>
+                </div>
+                <div class="modal-footer border-top-0 pt-0">
+                    <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+<script>
+    function calculatePending(studentId) {
+        const totalInput = document.getElementById(`totalFee-${studentId}`);
+        const receivedInput = document.getElementById(`receivedFee-${studentId}`);
+        const pendingInput = document.getElementById(`pendingFee-${studentId}`);
+        if (totalInput && receivedInput && pendingInput) {
+            const total = parseFloat(totalInput.value) || 0;
+            const received = parseFloat(receivedInput.value) || 0;
+            pendingInput.value = Math.max(0, total - received);
+        }
+    }
+</script>
 
 <script>
     // Live ticking clock in IST timezone

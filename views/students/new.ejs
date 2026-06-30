@@ -27,10 +27,24 @@
                     </div>
                     
                     <!-- Parent Mobile -->
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label for="parentMobile" class="form-label fw-semibold">Parent Mobile Number</label>
                         <input type="tel" class="form-control rounded-3" id="parentMobile" name="student[parentMobile]" placeholder="e.g. 9876543210" pattern="[0-9]{10}" required>
                         <div class="invalid-feedback">Please enter a valid 10-digit mobile number.</div>
+                    </div>
+
+                    <!-- Total Fee -->
+                    <div class="mb-3">
+                        <label for="totalFee" class="form-label fw-semibold">Total Fee (Rs.)</label>
+                        <input type="number" class="form-control rounded-3" id="totalFee" name="student[totalFee]" placeholder="e.g. 5000" min="0" required>
+                        <div class="invalid-feedback">Please enter the total fee.</div>
+                    </div>
+
+                    <!-- Received Fee -->
+                    <div class="mb-4">
+                        <label for="receivedFee" class="form-label fw-semibold">Received Fee (Rs.)</label>
+                        <input type="number" class="form-control rounded-3" id="receivedFee" name="student[receivedFee]" placeholder="e.g. 0" min="0" required>
+                        <div class="invalid-feedback">Please enter the received fee.</div>
                     </div>
                     
                     <!-- Submit Button -->

@@ -135,4 +135,94 @@ Shri Ganesh Classes
     }
 };
 
-module.exports = { sendWhatsAppMessage };
+/**
+ * Sends a WhatsApp message to a parent about their child's pending fees
+ * @param {string} parentNumber - The parent's mobile number
+ * @param {string} studentName - The name of the student
+ * @param {string} className - The class of the student
+ * @param {number} pendingFee - The pending fee amount
+ */
+const sendWhatsAppFeeMessage = async (parentNumber, studentName, className, pendingFee) => {
+    try {
+        if (!accessToken || !phoneNumberId) {
+            console.warn('[META WHATSAPP WARNING] Missing WHATSAPP_ACCESS_TOKEN or WHATSAPP_PHONE_NUMBER_ID in .env');
+            return { success: false, error: 'Missing API credentials' };
+        }
+
+        let formattedTo = parentNumber.trim().replace(/\D/g, '');
+        if (formattedTo.length === 10) {
+            formattedTo = '91' + formattedTo;
+        }
+
+        const messageBody = `Dear Parent, this is a reminder that the pending fee for your ward ${studentName} in Class ${className} is Rs. ${pendingFee}. Please clear it at the earliest.
+Shri Ganesh Classes
+
+प्रिय पालक, कृपया नोंद घ्या की आपला पाल्य ${studentName} (इयत्ता: ${className}) याची थकबाकी रु. ${pendingFee} आहे. कृपया ती लवकरात लवकर जमा करावी.
+श्री गणेश क्लासेस
+
+प्रिय अभिभावक, कृपया ध्यान दें कि आपके बच्चे ${studentName} (कक्षा: ${className}) की बकाया फीस रु. ${pendingFee} है। कृपया इसे जल्द से जल्द जमा करें।
+श्री गणेश क्लासेस`;
+
+        const url = `https://graph.facebook.com/v23.0/${phoneNumberId}/messages`;
+        
+        const feeTemplateName = process.env.WHATSAPP_FEE_TEMPLATE_NAME;
+        let payload;
+
+        if (feeTemplateName) {
+            payload = {
+                messaging_product: "whatsapp",
+                to: formattedTo,
+                type: "template",
+                template: {
+                    name: feeTemplateName,
+                    language: {
+                        code: process.env.WHATSAPP_TEMPLATE_LANG || 'en_US'
+                    },
+                    components: [
+                        {
+                            type: "body",
+                            parameters: [
+                                { type: "text", text: studentName },
+                                { type: "text", text: className },
+                                { type: "text", text: String(pendingFee) }
+                            ]
+                        }
+                    ]
+                }
+            };
+        } else {
+            payload = {
+                messaging_product: "whatsapp",
+                to: formattedTo,
+                type: "text",
+                text: {
+                    body: messageBody
+                }
+            };
+        }
+
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            }
+        };
+
+        const response = await axios.post(url, payload, config);
+        console.log(`✓ Fee reminder sent successfully`);
+        return { success: true, sid: response.data.messages[0].id };
+    } catch (error) {
+        if (error.response) {
+            console.error(`✓ Fee message delivery error:`, JSON.stringify(error.response.data, null, 2));
+            return { success: false, error: error.response.data.error?.message || 'API Error' };
+        } else if (error.request) {
+            console.error(`✓ Fee message delivery error: No response received from Meta API.`);
+            return { success: false, error: 'No response from API' };
+        } else {
+            console.error(`✓ Fee message delivery error: ${error.message}`);
+            return { success: false, error: error.message };
+        }
+    }
+};
+
+module.exports = { sendWhatsAppMessage, sendWhatsAppFeeMessage };

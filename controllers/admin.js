@@ -140,6 +140,13 @@ module.exports.showClassAbsentees = async (req, res) => {
         }
     }
 
+    // Sort absent records alphabetically by student name
+    uniqueAbsentRecords.sort((a, b) => {
+        const nameA = a.student ? a.student.name : '';
+        const nameB = b.student ? b.student.name : '';
+        return nameA.localeCompare(nameB, 'en', { sensitivity: 'base', numeric: true });
+    });
+
     res.render('admin/classAbsentees', {
         className,
         absentRecords: uniqueAbsentRecords,

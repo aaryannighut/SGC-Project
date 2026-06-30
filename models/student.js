@@ -34,6 +34,18 @@ const studentSchema = new Schema({
         type: String,
         enum: ['Present', 'Absent'],
         default: 'Absent'
+    },
+    totalFee: {
+        type: Number,
+        default: 0
+    },
+    receivedFee: {
+        type: Number,
+        default: 0
+    },
+    pendingFee: {
+        type: Number,
+        default: 0
     }
 }, { timestamps: true });
 

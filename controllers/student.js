@@ -9,6 +9,15 @@ const Class = require('../models/class');
 const Teacher = require('../models/teacher');
 const ExpressError = require('../utils/expressError');
 
+// Helper to re-index serial numbers of students alphabetically by name within a class
+const reindexStudentsByClass = async (className) => {
+    const students = await Student.find({ className });
+    students.sort((a, b) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base', numeric: true }));
+    for (let i = 0; i < students.length; i++) {
+        await Student.findByIdAndUpdate(students[i]._id, { serialNo: i + 1 });
+    }
+};
+
 // Show class selection dashboard
 module.exports.index = async (req, res) => {
     const classes = await Class.find({}).sort({ className: 1 });
@@ -26,6 +35,10 @@ module.exports.showClassRegistry = async (req, res) => {
     if (!existingClass) {
         throw new ExpressError(400, 'Invalid class standard');
     }
+    
+    // Auto re-index when displaying the registry to ensure everything is sorted alphabetically
+    await reindexStudentsByClass(className);
+    
     const students = await Student.find({ className }).sort({ serialNo: 1 });
     res.render('students/index', { students, className, title: `Class ${className} Registry - Shri Ganesh Classes` });
 };
@@ -51,8 +64,15 @@ module.exports.createStudent = async (req, res) => {
     const lastStudent = await Student.findOne({ className }).sort({ serialNo: -1 });
     const nextSerialNo = lastStudent && typeof lastStudent.serialNo === 'number' ? lastStudent.serialNo + 1 : 1;
     
+    const totalFee = parseFloat(req.body.student.totalFee) || 0;
+    const receivedFee = parseFloat(req.body.student.receivedFee) || 0;
+    const pendingFee = totalFee - receivedFee;
+    
     const student = new Student({
         ...req.body.student,
+        totalFee,
+        receivedFee,
+        pendingFee,
         className,
         serialNo: nextSerialNo
     });
@@ -137,6 +157,9 @@ module.exports.showAttendanceSummary = async (req, res) => {
         throw new ExpressError(400, 'Invalid class standard');
     }
     
+    // Auto re-index to ensure everything is sorted alphabetically
+    await reindexStudentsByClass(className);
+    
     // Fetch all students in this class
     const students = await Student.find({ className }).sort({ serialNo: 1 });
     
@@ -166,8 +189,11 @@ module.exports.sendAttendanceToAdmin = async (req, res) => {
         throw new ExpressError(400, 'Invalid class standard');
     }
     
+    // Auto re-index to ensure everything is sorted alphabetically
+    await reindexStudentsByClass(className);
+    
     // Find all students in this class
-    const students = await Student.find({ className });
+    const students = await Student.find({ className }).sort({ serialNo: 1 });
     if (students.length === 0) {
         req.flash('error', `No students found in Class ${className} to record attendance.`);
         return res.redirect('/students');
@@ -371,4 +397,68 @@ module.exports.showHistoryDetail = async (req, res) => {
         subject,
         title: `${student.name} - Monthly Details`
     });
+};
+
+// Update student fees details
+module.exports.updateStudentFees = async (req, res) => {
+    const { id } = req.params;
+    if (!req.body.student) {
+        throw new ExpressError(400, 'Invalid Student Fee Data');
+    }
+    
+    const { totalFee, receivedFee } = req.body.student;
+    const parsedTotal = parseFloat(totalFee) || 0;
+    const parsedReceived = parseFloat(receivedFee) || 0;
+    const parsedPending = parsedTotal - parsedReceived;
+    
+    const student = await Student.findByIdAndUpdate(id, {
+        totalFee: parsedTotal,
+        receivedFee: parsedReceived,
+        pendingFee: parsedPending
+    }, { new: true });
+    
+    if (!student) {
+        throw new ExpressError(404, 'Student not found');
+    }
+    
+    req.flash('success', `Fees updated for ${student.name} successfully.`);
+    res.redirect(`/students/class/${student.className}`);
+};
+
+// Send WhatsApp fee reminders for pending amounts to all parents in a class standard
+module.exports.notifyPendingFees = async (req, res) => {
+    const { className } = req.params;
+    const existingClass = await Class.findOne({ className });
+    if (!existingClass) {
+        throw new ExpressError(400, 'Invalid class standard');
+    }
+    
+    const students = await Student.find({ className });
+    const pendingStudents = students.filter(s => s.pendingFee > 0);
+    
+    if (pendingStudents.length === 0) {
+        req.flash('error', `No students with pending fees found in Class ${className}.`);
+        return res.redirect(`/students/class/${className}`);
+    }
+    
+    const { sendWhatsAppFeeMessage } = require('../utils/whatsapp');
+    const whatsappPromises = [];
+    
+    for (const student of pendingStudents) {
+        if (student.parentMobile) {
+            whatsappPromises.push(sendWhatsAppFeeMessage(student.parentMobile, student.name, className, student.pendingFee));
+        } else {
+            console.warn(`[FEES WORKFLOW WARNING] Student ${student.name} has pending fee but no parent mobile number.`);
+        }
+    }
+    
+    try {
+        await Promise.allSettled(whatsappPromises);
+        req.flash('success', `WhatsApp fee notifications sent successfully for Class ${className}!`);
+    } catch (err) {
+        console.error('[FEES WORKFLOW ERROR]', err);
+        req.flash('error', 'Failed to send some fee notifications.');
+    }
+    
+    res.redirect(`/students/class/${className}`);
 };

@@ -87,7 +87,7 @@
                 <div class="modal-content rounded-4 border-0 shadow">
                     <div class="modal-header border-bottom-0">
                         <h5 class="modal-title fw-bold text-dark" id="editClassModalLabel-<%= classItem._id %>">Edit Class Name</h5>
-                        <button type="button" class="btn-close" data-bs-close="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form action="/classes/<%= classItem._id %>?_method=PUT" method="POST" class="needs-validation" novalidate>
                         <div class="modal-body py-3">
@@ -98,7 +98,7 @@
                             </div>
                         </div>
                         <div class="modal-footer border-top-0 pt-0">
-                            <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" data-bs-close="modal">Cancel</button>
+                            <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Cancel</button>
                             <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold btn-gradient-blue border-0">Save Changes</button>
                         </div>
                     </form>
