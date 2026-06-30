@@ -67,6 +67,14 @@ module.exports.deleteClass = async (req, res) => {
         throw new ExpressError(404, 'Class not found');
     }
     
+    // Delete all students belonging to this class standard
+    const Student = require('../models/student');
+    await Student.deleteMany({ className: classItem.className });
+    
+    // Delete all attendance records associated with this class standard
+    const Attendance = require('../models/attendance');
+    await Attendance.deleteMany({ className: classItem.className });
+    
     await Class.findByIdAndDelete(id);
     res.redirect('/classes');
 };
