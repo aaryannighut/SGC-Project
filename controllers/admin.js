@@ -56,9 +56,10 @@ module.exports.logout = (req, res) => {
 module.exports.dashboard = async (req, res) => {
     const studentCount = await Student.countDocuments({});
     const teacherCount = await Teacher.countDocuments({});
-    const classCount = await Class.countDocuments({});
+    const classes = await Class.find({}).sort({ className: 1 });
+    const classCount = classes.length;
 
-    const allowedClasses = ['5th', '6th', '7th', '8th', '9th', '10th'];
+    const allowedClasses = classes.map(c => c.className);
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
     const endOfDay = new Date();
@@ -99,6 +100,7 @@ module.exports.dashboard = async (req, res) => {
         teacherCount, 
         classCount,
         classAttendanceSummary,
+        allowedClasses,
         title: 'Admin Dashboard - Shri Ganesh Classes' 
     });
 };
@@ -106,8 +108,8 @@ module.exports.dashboard = async (req, res) => {
 // Render a view listing all absent students for a class today
 module.exports.showClassAbsentees = async (req, res) => {
     const { className } = req.params;
-    const allowedClasses = ['5th', '6th', '7th', '8th', '9th', '10th'];
-    if (!allowedClasses.includes(className)) {
+    const existingClass = await Class.findOne({ className });
+    if (!existingClass) {
         throw new ExpressError(400, 'Invalid class standard');
     }
 
@@ -148,8 +150,8 @@ module.exports.showClassAbsentees = async (req, res) => {
 // Send WhatsApp notifications to parents of absent students for a class standard today
 module.exports.sendWhatsAppToAbsentees = async (req, res) => {
     const { className } = req.params;
-    const allowedClasses = ['5th', '6th', '7th', '8th', '9th', '10th'];
-    if (!allowedClasses.includes(className)) {
+    const existingClass = await Class.findOne({ className });
+    if (!existingClass) {
         throw new ExpressError(400, 'Invalid class standard');
     }
 

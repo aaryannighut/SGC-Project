@@ -124,7 +124,7 @@
                     <span class="badge bg-light text-secondary border rounded-pill px-3 py-1.5 fw-semibold small">Today's Logs</span>
                 </div>
                 <div class="row g-3">
-                    <% const classes = ['5th', '6th', '7th', '8th', '9th', '10th']; %>
+                    <% const classes = allowedClasses; %>
                     <% for (let className of classes) { %>
                         <% const summary = classAttendanceSummary[className]; %>
                         <div class="col-12 col-sm-6 col-md-4">

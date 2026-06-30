@@ -21,7 +21,7 @@ router.get('/new', isAdmin, (req, res) => {
 // Class-specific routes
 router.get('/class/:className', wrapAsync(studentController.showClassRegistry));
 router.post('/class/:className', isAdmin, wrapAsync(studentController.createStudent));
-router.get('/class/:className/new', isAdmin, studentController.renderNewForm);
+router.get('/class/:className/new', isAdmin, wrapAsync(studentController.renderNewForm));
 router.get('/class/:className/attendance-summary', wrapAsync(studentController.showAttendanceSummary));
 router.post('/class/:className/send-to-admin', wrapAsync(studentController.sendAttendanceToAdmin));
 

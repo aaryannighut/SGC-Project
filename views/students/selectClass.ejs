@@ -9,31 +9,34 @@
     <!-- Class Cards Grid -->
     <div class="row g-4 justify-content-center">
         <% 
-        const classes = [
-            { name: '5th', desc: 'Primary standard fundamentals', icon: '🏫', color: 'from-primary to-info' },
-            { name: '6th', desc: 'Intermediate course introductory level', icon: '📚', color: 'from-success to-teal' },
-            { name: '7th', desc: 'Intermediate course secondary level', icon: '✏️', color: 'from-warning to-orange' },
-            { name: '8th', desc: 'Pre-high school standard', icon: '🧪', color: 'from-danger to-pink' },
-            { name: '9th', desc: 'High school core subjects', icon: '📐', color: 'from-purple to-indigo' },
-            { name: '10th', desc: 'Board examination preparatory', icon: '🎓', color: 'from-dark to-secondary' }
-        ];
+        const predefined = {
+            '5th': { desc: 'Primary standard fundamentals', icon: '🏫' },
+            '6th': { desc: 'Intermediate course introductory level', icon: '📚' },
+            '7th': { desc: 'Intermediate course secondary level', icon: '✏️' },
+            '8th': { desc: 'Pre-high school standard', icon: '🧪' },
+            '9th': { desc: 'High school core subjects', icon: '📐' },
+            '10th': { desc: 'Board examination preparatory', icon: '🎓' }
+        };
         %>
 
-        <% for (let cls of classes) { %>
+        <% for (let c of classes) { %>
+            <% 
+            const info = predefined[c.className] || { desc: 'Academic class standard', icon: '🏫' };
+            %>
             <div class="col-12 col-md-6 col-lg-4">
-                <a href="/students/class/<%= cls.name %>" class="text-decoration-none card border-0 rounded-4 shadow-sm bg-white-glass h-100 overflow-hidden transition-all hover-translate-y hover-shadow-lg position-relative d-flex flex-column justify-content-between p-4">
+                <a href="/students/class/<%= c.className %>" class="text-decoration-none card border-0 rounded-4 shadow-sm bg-white-glass h-100 overflow-hidden transition-all hover-translate-y hover-shadow-lg position-relative d-flex flex-column justify-content-between p-4">
                     <!-- Color accent bar on top -->
                     <div class="position-absolute top-0 start-0 end-0 h-1 bg-gradient-nav"></div>
                     
                     <div>
                         <div class="d-flex align-items-center justify-content-between mb-3">
-                            <span class="fs-1"><%= cls.icon %></span>
+                            <span class="fs-1"><%= info.icon %></span>
                             <span class="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-1.5 fw-bold">
-                                <%= classCounts[cls.name] || 0 %> Students
+                                <%= classCounts[c.className] || 0 %> Students
                             </span>
                         </div>
-                        <h3 class="fw-bold text-dark mb-2"><%= cls.name %> Class</h3>
-                        <p class="text-muted small mb-0"><%= cls.desc %></p>
+                        <h3 class="fw-bold text-dark mb-2"><%= c.className %> Class</h3>
+                        <p class="text-muted small mb-0"><%= info.desc %></p>
                     </div>
 
                     <div class="mt-4 pt-3 border-top d-flex align-items-center justify-content-between text-primary fw-semibold">

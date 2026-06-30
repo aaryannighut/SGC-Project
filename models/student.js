@@ -18,8 +18,7 @@ const studentSchema = new Schema({
     },
     className: {
         type: String,
-        required: true,
-        enum: ['5th', '6th', '7th', '8th', '9th', '10th']
+        required: true
     },
     parentName: {
         type: String,

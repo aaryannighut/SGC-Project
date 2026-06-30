@@ -11,19 +11,19 @@ const ExpressError = require('../utils/expressError');
 
 // Show class selection dashboard
 module.exports.index = async (req, res) => {
-    const classNames = ['5th', '6th', '7th', '8th', '9th', '10th'];
+    const classes = await Class.find({}).sort({ className: 1 });
     const classCounts = {};
-    for (let name of classNames) {
-        classCounts[name] = await Student.countDocuments({ className: name });
+    for (let c of classes) {
+        classCounts[c.className] = await Student.countDocuments({ className: c.className });
     }
-    res.render('students/selectClass', { classCounts, title: 'Select Class - Shri Ganesh Classes' });
+    res.render('students/selectClass', { classes, classCounts, title: 'Select Class - Shri Ganesh Classes' });
 };
 
 // Show registry for a specific class
 module.exports.showClassRegistry = async (req, res) => {
     const { className } = req.params;
-    const allowedClasses = ['5th', '6th', '7th', '8th', '9th', '10th'];
-    if (!allowedClasses.includes(className)) {
+    const existingClass = await Class.findOne({ className });
+    if (!existingClass) {
         throw new ExpressError(400, 'Invalid class standard');
     }
     const students = await Student.find({ className }).sort({ serialNo: 1 });
@@ -31,10 +31,10 @@ module.exports.showClassRegistry = async (req, res) => {
 };
 
 // Render form to create new student in a specific class
-module.exports.renderNewForm = (req, res) => {
+module.exports.renderNewForm = async (req, res) => {
     const { className } = req.params;
-    const allowedClasses = ['5th', '6th', '7th', '8th', '9th', '10th'];
-    if (!allowedClasses.includes(className)) {
+    const existingClass = await Class.findOne({ className });
+    if (!existingClass) {
         throw new ExpressError(400, 'Invalid class standard');
     }
     res.render('students/new', { className, title: `Add Student to Class ${className} - Shri Ganesh Classes` });
@@ -132,8 +132,8 @@ module.exports.toggleAttendance = async (req, res) => {
 // Show attendance review/summary for absent students
 module.exports.showAttendanceSummary = async (req, res) => {
     const { className } = req.params;
-    const allowedClasses = ['5th', '6th', '7th', '8th', '9th', '10th'];
-    if (!allowedClasses.includes(className)) {
+    const existingClass = await Class.findOne({ className });
+    if (!existingClass) {
         throw new ExpressError(400, 'Invalid class standard');
     }
     
@@ -161,8 +161,8 @@ module.exports.showAttendanceSummary = async (req, res) => {
 // Send attendance data to admin (save to Attendance collection)
 module.exports.sendAttendanceToAdmin = async (req, res) => {
     const { className } = req.params;
-    const allowedClasses = ['5th', '6th', '7th', '8th', '9th', '10th'];
-    if (!allowedClasses.includes(className)) {
+    const existingClass = await Class.findOne({ className });
+    if (!existingClass) {
         throw new ExpressError(400, 'Invalid class standard');
     }
     

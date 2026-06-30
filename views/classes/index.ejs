@@ -18,19 +18,11 @@
                         <% for (let classItem of classes) { %>
                             <div class="col-12 col-md-6">
                                 <div class="card rounded-3 border-0 bg-light p-3 position-relative transition-all hero-card">
-                                    <div class="d-flex justify-content-between align-items-start">
+                                    <div class="d-flex justify-content-between align-items-center">
                                         <div>
-                                            <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-1.5 fw-bold fs-6 mb-2">
-                                                <%= classItem.className %>
+                                            <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-1.5 fw-bold fs-6">
+                                                Class <%= classItem.className %>
                                             </span>
-                                            <div class="mt-2 text-muted small fw-medium">Assigned Teacher</div>
-                                            <div class="fw-bold text-dark fs-5 mt-1">
-                                                <% if (classItem.assignedTeacher) { %>
-                                                    👨‍🏫 <%= classItem.assignedTeacher.name %>
-                                                <% } else { %>
-                                                    <span class="text-warning">⚠️ Unassigned</span>
-                                                <% } %>
-                                            </div>
                                         </div>
                                     </div>
                                     
@@ -70,29 +62,10 @@
                 
                 <form action="/classes" method="POST" class="needs-validation" novalidate>
                     <!-- Class Selection -->
-                    <div class="mb-3">
-                        <label for="newClassName" class="form-label fw-semibold">Class Standard</label>
-                        <select class="form-select rounded-3" id="newClassName" name="class[className]" required>
-                            <option value="" disabled selected>Select class standard...</option>
-                            <option value="5th">5th</option>
-                            <option value="6th">6th</option>
-                            <option value="7th">7th</option>
-                            <option value="8th">8th</option>
-                            <option value="9th">9th</option>
-                            <option value="10th">10th</option>
-                        </select>
-                        <div class="invalid-feedback">Please select a class standard.</div>
-                    </div>
-                    
-                    <!-- Teacher Selection -->
                     <div class="mb-4">
-                        <label for="newAssignedTeacher" class="form-label fw-semibold">Assign Teacher (Optional)</label>
-                        <select class="form-select rounded-3" id="newAssignedTeacher" name="class[assignedTeacher]">
-                            <option value="">No Teacher Assigned</option>
-                            <% for (let teacher of teachers) { %>
-                                <option value="<%= teacher._id %>"><%= teacher.name %></option>
-                            <% } %>
-                        </select>
+                        <label for="newClassName" class="form-label fw-semibold">Class Standard</label>
+                        <input type="text" class="form-control rounded-3" id="newClassName" name="class[className]" placeholder="Enter class standard (e.g. 10th)" required>
+                        <div class="invalid-feedback">Please enter a class standard.</div>
                     </div>
                     
                     <!-- Submit Button -->
@@ -113,30 +86,15 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content rounded-4 border-0 shadow">
                     <div class="modal-header border-bottom-0">
-                        <h5 class="modal-title fw-bold text-dark" id="editClassModalLabel-<%= classItem._id %>">Update Class Assignment</h5>
+                        <h5 class="modal-title fw-bold text-dark" id="editClassModalLabel-<%= classItem._id %>">Edit Class Name</h5>
                         <button type="button" class="btn-close" data-bs-close="modal" aria-label="Close"></button>
                     </div>
                     <form action="/classes/<%= classItem._id %>?_method=PUT" method="POST" class="needs-validation" novalidate>
                         <div class="modal-body py-3">
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Class Name</label>
-                                <select class="form-select rounded-3" name="class[className]" required>
-                                    <option value="5th" <%= classItem.className === '5th' ? 'selected' : '' %>>5th</option>
-                                    <option value="6th" <%= classItem.className === '6th' ? 'selected' : '' %>>6th</option>
-                                    <option value="7th" <%= classItem.className === '7th' ? 'selected' : '' %>>7th</option>
-                                    <option value="8th" <%= classItem.className === '8th' ? 'selected' : '' %>>8th</option>
-                                    <option value="9th" <%= classItem.className === '9th' ? 'selected' : '' %>>9th</option>
-                                    <option value="10th" <%= classItem.className === '10th' ? 'selected' : '' %>>10th</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Assign Teacher</label>
-                                <select class="form-select rounded-3" name="class[assignedTeacher]">
-                                    <option value="">No Teacher Assigned</option>
-                                    <% for (let teacher of teachers) { %>
-                                        <option value="<%= teacher._id %>" <%= classItem.assignedTeacher && String(classItem.assignedTeacher._id) === String(teacher._id) ? 'selected' : '' %>><%= teacher.name %></option>
-                                    <% } %>
-                                </select>
+                                <input type="text" class="form-control rounded-3" name="class[className]" value="<%= classItem.className %>" required>
+                                <div class="invalid-feedback">Please enter a class name.</div>
                             </div>
                         </div>
                         <div class="modal-footer border-top-0 pt-0">

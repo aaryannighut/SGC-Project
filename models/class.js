@@ -10,8 +10,7 @@ const classSchema = new Schema({
     className: {
         type: String,
         required: true,
-        unique: true,
-        enum: ['5th', '6th', '7th', '8th', '9th', '10th']
+        unique: true
     },
     assignedTeacher: {
         type: Schema.Types.ObjectId,
