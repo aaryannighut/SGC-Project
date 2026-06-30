@@ -56,7 +56,8 @@ module.exports.logout = (req, res) => {
 module.exports.dashboard = async (req, res) => {
     const studentCount = await Student.countDocuments({});
     const teacherCount = await Teacher.countDocuments({});
-    const classes = await Class.find({}).sort({ className: 1 });
+    const classes = await Class.find({});
+    classes.sort((a, b) => a.className.localeCompare(b.className, 'en', { numeric: true }));
     const classCount = classes.length;
 
     const allowedClasses = classes.map(c => c.className);

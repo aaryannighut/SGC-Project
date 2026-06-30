@@ -20,7 +20,8 @@ const reindexStudentsByClass = async (className) => {
 
 // Show class selection dashboard
 module.exports.index = async (req, res) => {
-    const classes = await Class.find({}).sort({ className: 1 });
+    const classes = await Class.find({});
+    classes.sort((a, b) => a.className.localeCompare(b.className, 'en', { numeric: true }));
     const classCounts = {};
     for (let c of classes) {
         classCounts[c.className] = await Student.countDocuments({ className: c.className });

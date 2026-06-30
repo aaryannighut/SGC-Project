@@ -9,7 +9,8 @@ const ExpressError = require('../utils/expressError');
 
 // Show all classes and handle adding new classes on the same page
 module.exports.index = async (req, res) => {
-    const classes = await Class.find({}).populate('assignedTeacher').sort({ className: 1 });
+    const classes = await Class.find({}).populate('assignedTeacher');
+    classes.sort((a, b) => a.className.localeCompare(b.className, 'en', { numeric: true }));
     const teachers = await Teacher.find({});
     res.render('classes/index', { classes, teachers, title: 'Manage Classes - Shri Ganesh Classes' });
 };
