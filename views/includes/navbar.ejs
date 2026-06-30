@@ -10,9 +10,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-center gap-2 mt-2 mt-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link px-3" href="/">Home</a>
-                </li>
+                <% if (!isTeacher) { %>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="/">Home</a>
+                    </li>
+                <% } %>
                 <% if (isAdmin) { %>
                     <li class="nav-item">
                         <a class="nav-link px-3" href="/admin/dashboard">Dashboard</a>
@@ -44,8 +46,26 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const navLinks = document.querySelectorAll('.nav-link');
+        const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
         const navbarCollapse = document.getElementById('navbarNav');
+        
+        // Highlight active link based on current path
+        const currentPath = window.location.pathname;
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            // Skip logout button
+            if (link.classList.contains('nav-btn-outline')) return;
+            
+            if (href === '/') {
+                if (currentPath === '/') {
+                    link.classList.add('active');
+                    link.setAttribute('aria-current', 'page');
+                }
+            } else if (href && currentPath.startsWith(href)) {
+                link.classList.add('active');
+                link.setAttribute('aria-current', 'page');
+            }
+        });
         
         navLinks.forEach(link => {
             link.addEventListener('click', () => {

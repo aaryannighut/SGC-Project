@@ -37,6 +37,38 @@ body {
     letter-spacing: -0.02em;
 }
 
+/* Navigation Active & Hover Indicator */
+.navbar-nav .nav-link {
+    transition: color 0.25s ease;
+}
+
+.navbar-nav .nav-link.active {
+    color: #d99100 !important;
+    font-weight: 600;
+}
+
+@media (min-width: 992px) {
+    .navbar-nav .nav-link {
+        position: relative;
+    }
+    .navbar-nav .nav-link::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 2px;
+        left: 1rem;
+        background-color: #d99100;
+        transition: width 0.25s ease;
+    }
+    .navbar-nav .nav-link.active::after {
+        width: calc(100% - 2rem);
+    }
+    .navbar-nav .nav-link:hover::after {
+        width: calc(100% - 2rem);
+    }
+}
+
 /* Navbar Buttons */
 .nav-btn-outline {
     border: 1.5px solid rgba(255, 255, 255, 0.6);

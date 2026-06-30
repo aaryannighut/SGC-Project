@@ -123,6 +123,9 @@ const Teacher = require('./models/teacher');
 
 // Home Route
 app.get('/', (req, res) => {
+    if (req.session.isTeacher) {
+        return res.redirect('/students');
+    }
     res.render('home', { title: 'Shri Ganesh Classes - Smart Academy Suite' });
 });
 
