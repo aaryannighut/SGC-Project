@@ -133,11 +133,29 @@ module.exports.updateStudent = async (req, res) => {
     if (!req.body.student) {
         throw new ExpressError(400, 'Invalid Student Data');
     }
-    const student = await Student.findByIdAndUpdate(id, { ...req.body.student }, { new: true, runValidators: true });
+    
+    const student = await Student.findById(id);
     if (!student) {
         throw new ExpressError(404, 'Student not found');
     }
-    res.redirect(`/students/${student._id}`);
+    
+    const totalFee = typeof req.body.student.totalFee !== 'undefined' 
+        ? parseFloat(req.body.student.totalFee) || 0 
+        : student.totalFee;
+    const receivedFee = typeof req.body.student.receivedFee !== 'undefined' 
+        ? parseFloat(req.body.student.receivedFee) || 0 
+        : student.receivedFee;
+    const pendingFee = Math.max(0, totalFee - receivedFee);
+    
+    const updatedData = {
+        ...req.body.student,
+        totalFee,
+        receivedFee,
+        pendingFee
+    };
+    
+    const updatedStudent = await Student.findByIdAndUpdate(id, updatedData, { new: true, runValidators: true });
+    res.redirect(`/students/class/${updatedStudent.className}`);
 };
 
 // Delete student

@@ -3,8 +3,8 @@
 <div class="container my-4">
     <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-6">
-            <a href="/students/<%= student._id %>" class="btn btn-link text-decoration-none text-muted mb-4 p-0 fw-semibold d-inline-flex align-items-center gap-1">
-                <span>⬅️</span> Back to Details
+            <a href="/students/class/<%= student.className %>" class="btn btn-link text-decoration-none text-muted mb-4 p-0 fw-semibold d-inline-flex align-items-center gap-1">
+                <span>⬅️</span> Back to Class Registry
             </a>
             
             <div class="card border-0 rounded-4 shadow-lg bg-white-glass p-4 p-md-5">
@@ -27,10 +27,24 @@
                     </div>
                     
                     <!-- Parent Mobile -->
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label for="parentMobile" class="form-label fw-semibold">Parent Mobile Number</label>
                         <input type="tel" class="form-control rounded-3" id="parentMobile" name="student[parentMobile]" value="<%= student.parentMobile %>" placeholder="e.g. 9876543210" pattern="[0-9]{10}" required>
                         <div class="invalid-feedback">Please enter a valid 10-digit mobile number.</div>
+                    </div>
+                    
+                    <!-- Total Fee -->
+                    <div class="mb-3">
+                        <label for="totalFee" class="form-label fw-semibold">Total Fee (Rs.)</label>
+                        <input type="number" class="form-control rounded-3" id="totalFee" name="student[totalFee]" value="<%= student.totalFee || 0 %>" min="0" required>
+                        <div class="invalid-feedback">Please enter the total fee.</div>
+                    </div>
+
+                    <!-- Received Fee -->
+                    <div class="mb-4">
+                        <label for="receivedFee" class="form-label fw-semibold">Received Fee (Previously Paid) (Rs.)</label>
+                        <input type="number" class="form-control rounded-3" id="receivedFee" name="student[receivedFee]" value="<%= student.receivedFee || 0 %>" min="0" required>
+                        <div class="invalid-feedback">Please enter the received fee.</div>
                     </div>
                     
                     <!-- Submit Button -->

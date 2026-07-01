@@ -58,7 +58,7 @@ module.exports.updateTeacher = async (req, res) => {
     if (!teacher) {
         throw new ExpressError(404, 'Teacher not found');
     }
-    res.redirect(`/teachers/${teacher._id}`);
+    res.redirect('/teachers');
 };
 
 // Delete teacher
