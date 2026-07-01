@@ -40,6 +40,32 @@ module.exports.showClassRegistry = async (req, res) => {
     // Auto re-index when displaying the registry to ensure everything is sorted alphabetically
     await reindexStudentsByClass(className);
     
+    // Calculate midnight today in IST timezone
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Kolkata',
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric'
+    });
+    const dateParts = formatter.formatToParts(now);
+    const year = dateParts.find(p => p.type === 'year').value;
+    const month = dateParts.find(p => p.type === 'month').value.padStart(2, '0');
+    const day = dateParts.find(p => p.type === 'day').value.padStart(2, '0');
+    const midnightIST = new Date(`${year}-${month}-${day}T00:00:00+05:30`);
+    
+    // Reset status to 'Present' for students whose records haven't been updated today yet
+    await Student.updateMany(
+        { 
+            className, 
+            $or: [
+                { updatedAt: { $lt: midnightIST } },
+                { status: { $exists: false } }
+            ]
+        },
+        { status: 'Present' }
+    );
+    
     const students = await Student.find({ className }).sort({ serialNo: 1 });
     res.render('students/index', { students, className, title: `Class ${className} Registry - Shri Ganesh Classes` });
 };
