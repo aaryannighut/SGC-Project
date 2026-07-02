@@ -25,6 +25,7 @@ const adminRoutes = require('./routes/admin');
 const ExpressError = require('./utils/expressError');
 const { isAdminLoggedIn, isLoggedIn } = require('./middleware');
 const { formatMongoUri } = require('./utils/db');
+const { resetAllStudentsIfMissed, scheduleDailyReset } = require('./utils/attendanceReset');
 
 const app = express();
 
@@ -99,6 +100,10 @@ async function connectDB() {
     try {
         await mongoose.connect(dbUrl);
         console.log("MongoDB Connected");
+
+        // Run catch-up student attendance reset and start the daily scheduler
+        await resetAllStudentsIfMissed();
+        scheduleDailyReset();
 
         // Proactively clean up obsolete unique email index from teachers collection
         try {

@@ -8,6 +8,7 @@ const Attendance = require('../models/attendance');
 const Class = require('../models/class');
 const Teacher = require('../models/teacher');
 const ExpressError = require('../utils/expressError');
+const { getTodayMidnightIST } = require('../utils/attendanceReset');
 
 // Helper to re-index serial numbers of students alphabetically by name within a class
 const reindexStudentsByClass = async (className) => {
@@ -40,19 +41,8 @@ module.exports.showClassRegistry = async (req, res) => {
     // Auto re-index when displaying the registry to ensure everything is sorted alphabetically
     await reindexStudentsByClass(className);
     
-    // Calculate midnight today in IST timezone
-    const now = new Date();
-    const formatter = new Intl.DateTimeFormat('en-US', {
-        timeZone: 'Asia/Kolkata',
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric'
-    });
-    const dateParts = formatter.formatToParts(now);
-    const year = dateParts.find(p => p.type === 'year').value;
-    const month = dateParts.find(p => p.type === 'month').value.padStart(2, '0');
-    const day = dateParts.find(p => p.type === 'day').value.padStart(2, '0');
-    const midnightIST = new Date(`${year}-${month}-${day}T00:00:00+05:30`);
+    // Calculate midnight today in IST timezone using shared helper
+    const midnightIST = getTodayMidnightIST();
     
     // Reset status to 'Present' for students whose records haven't been updated today yet
     await Student.updateMany(
