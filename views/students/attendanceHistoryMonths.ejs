@@ -1,5 +1,36 @@
 <% layout('includes/boilerplate') -%>
 
+<style>
+    @media (max-width: 576px) {
+        .table-responsive table.custom-payment-table {
+            min-width: 0px !important;
+            table-layout: fixed !important;
+            width: 100% !important;
+        }
+        .table-responsive table.custom-payment-table th, 
+        .table-responsive table.custom-payment-table td {
+            padding: 6px 2px !important;
+            font-size: 0.74rem !important;
+            word-wrap: break-word !important;
+            white-space: normal !important;
+        }
+        .table-responsive table.custom-payment-table th:first-child,
+        .table-responsive table.custom-payment-table td:first-child {
+            width: 45px !important;
+            padding-left: 2px !important;
+        }
+        .table-responsive table.custom-payment-table th:nth-child(2),
+        .table-responsive table.custom-payment-table td:nth-child(2) {
+            width: 200px !important;
+        }
+        .table-responsive table.custom-payment-table th:nth-child(3),
+        .table-responsive table.custom-payment-table td:nth-child(3) {
+            width: auto !important;
+            padding-right: 2px !important;
+        }
+    }
+</style>
+
 <div class="container my-4">
     <!-- Back Button -->
     <a href="/students/class/<%= student.className %>" class="btn btn-link text-decoration-none text-muted mb-3 p-0 fw-semibold d-inline-flex align-items-center gap-1">
@@ -90,7 +121,7 @@
                     <h5 class="fw-bold text-dark mb-4">Chronological Installments Log</h5>
                     
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
+                        <table class="table table-hover align-middle mb-0 custom-payment-table">
                             <thead class="table-light text-secondary border-bottom">
                                 <tr>
                                     <th class="py-2">S.No.</th>
@@ -106,11 +137,10 @@
                                         const dateOptions = { 
                                             timeZone: 'Asia/Kolkata', 
                                             year: 'numeric', 
-                                            month: 'long', 
-                                            day: 'numeric', 
+                                            month: 'short', 
+                                            day: '2-digit', 
                                             hour: '2-digit', 
                                             minute: '2-digit', 
-                                            second: '2-digit',
                                             hour12: true 
                                         };
                                         const formattedDate = new Intl.DateTimeFormat('en-IN', dateOptions).format(payment.date);
