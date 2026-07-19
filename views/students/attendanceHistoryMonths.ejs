@@ -38,12 +38,101 @@
         </div>
     </div>
 
-    <% if (subject === 'all') { %>
-        <div class="alert alert-warning border-0 rounded-4 shadow-sm bg-warning-subtle text-warning-emphasis p-3 mb-4 d-flex align-items-center gap-3">
-            <span class="fs-4">⚠️</span>
-            <div>
-                <strong class="fw-bold d-block">Overall Attendance Log Only</strong>
-                <span class="small text-secondary">Please note that this dashboard shows the cumulative overall attendance. Subject-specific filters are not displayed here.</span>
+
+
+    <% if (isAdmin) { %>
+        <!-- Fees & Payment History Section -->
+        <div class="mt-4 mb-4">
+            <h4 class="fw-bold text-dark mb-1">💰 Fees & Payment History</h4>
+            <p class="text-muted mb-0">Review the student's fee structure details and chronological installment history.</p>
+        </div>
+
+        <div class="row g-4 mb-5">
+            <!-- Summary Column -->
+            <div class="col-12 col-lg-4">
+                <div class="card border-0 bg-white-glass rounded-4 shadow-sm p-4 h-100">
+                    <h5 class="fw-bold text-dark mb-4">Fee Structure Summary</h5>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-light">
+                        <span class="text-muted small fw-semibold">Total Fee</span>
+                        <span class="fw-bold text-dark fs-5">Rs. <%= student.totalFee || 0 %></span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-light">
+                        <span class="text-muted small fw-semibold">Total Received (Paid)</span>
+                        <span class="fw-bold text-success fs-5">Rs. <%= student.receivedFee || 0 %></span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <span class="text-muted small fw-semibold">Pending Fee</span>
+                        <span class="fw-bold text-danger fs-5">Rs. <%= student.pendingFee || 0 %></span>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <% 
+                    const percentPaid = student.totalFee > 0 ? Math.min(100, Math.round((student.receivedFee / student.totalFee) * 100)) : 0; 
+                    %>
+                    <div class="mt-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="small text-muted fw-semibold">Payment Progress</span>
+                            <span class="small fw-bold text-primary"><%= percentPaid %>%</span>
+                        </div>
+                        <div class="progress rounded-pill" style="height: 10px;">
+                            <div class="progress-bar bg-success rounded-pill" role="progressbar" style="width: <%= percentPaid %>%;" aria-valuenow="<%= percentPaid %>" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Installment Timeline Column -->
+            <div class="col-12 col-lg-8">
+                <div class="card border-0 bg-white-glass rounded-4 shadow-sm p-4 h-100">
+                    <h5 class="fw-bold text-dark mb-4">Chronological Installments Log</h5>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light text-secondary border-bottom">
+                                <tr>
+                                    <th class="py-2">S.No.</th>
+                                    <th class="py-2">Installment Paid</th>
+                                    <th class="py-2">Date & Time (IST)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (student.paymentHistory && student.paymentHistory.length > 0) { %>
+                                    <% 
+                                    const reversedHistory = [...student.paymentHistory].reverse();
+                                    reversedHistory.forEach((payment, index) => {
+                                        const dateOptions = { 
+                                            timeZone: 'Asia/Kolkata', 
+                                            year: 'numeric', 
+                                            month: 'long', 
+                                            day: 'numeric', 
+                                            hour: '2-digit', 
+                                            minute: '2-digit', 
+                                            second: '2-digit',
+                                            hour12: true 
+                                        };
+                                        const formattedDate = new Intl.DateTimeFormat('en-IN', dateOptions).format(payment.date);
+                                    %>
+                                        <tr>
+                                            <td class="fw-semibold text-secondary"><%= reversedHistory.length - index %></td>
+                                            <td class="fw-bold text-success">Rs. <%= payment.amount %></td>
+                                            <td class="text-dark small fw-medium"><%= formattedDate %></td>
+                                        </tr>
+                                    <% }) %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="3" class="text-center py-5 text-muted">
+                                            <span class="fs-1 d-block mb-2">💸</span>
+                                            <span class="fw-semibold small">No individual payment installments logged yet.</span>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     <% } %>

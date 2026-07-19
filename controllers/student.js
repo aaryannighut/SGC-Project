@@ -85,13 +85,22 @@ module.exports.createStudent = async (req, res) => {
     const receivedFee = parseFloat(req.body.student.receivedFee) || 0;
     const pendingFee = totalFee - receivedFee;
     
+    const paymentHistory = [];
+    if (receivedFee > 0) {
+        paymentHistory.push({
+            amount: receivedFee,
+            date: new Date()
+        });
+    }
+    
     const student = new Student({
         ...req.body.student,
         totalFee,
         receivedFee,
         pendingFee,
         className,
-        serialNo: nextSerialNo
+        serialNo: nextSerialNo,
+        paymentHistory
     });
     await student.save();
     res.redirect(`/students/class/${className}`);
@@ -137,11 +146,20 @@ module.exports.updateStudent = async (req, res) => {
         : student.receivedFee;
     const pendingFee = Math.max(0, totalFee - receivedFee);
     
+    const feeDiff = receivedFee - student.receivedFee;
+    if (feeDiff > 0) {
+        student.paymentHistory.push({
+            amount: feeDiff,
+            date: new Date()
+        });
+    }
+    
     const updatedData = {
         ...req.body.student,
         totalFee,
         receivedFee,
-        pendingFee
+        pendingFee,
+        paymentHistory: student.paymentHistory
     };
     
     const updatedStudent = await Student.findByIdAndUpdate(id, updatedData, { new: true, runValidators: true });
@@ -456,6 +474,13 @@ module.exports.updateStudentFees = async (req, res) => {
     student.totalFee = parsedTotal;
     student.receivedFee = newReceivedFee;
     student.pendingFee = parsedPending;
+    
+    if (parsedCurrentPayment > 0) {
+        student.paymentHistory.push({
+            amount: parsedCurrentPayment,
+            date: new Date()
+        });
+    }
     await student.save();
     
     req.flash('success', `Fees updated for ${student.name} successfully.`);

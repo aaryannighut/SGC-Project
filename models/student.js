@@ -46,7 +46,20 @@ const studentSchema = new Schema({
     pendingFee: {
         type: Number,
         default: 0
-    }
+    },
+    paymentHistory: [
+        {
+            amount: {
+                type: Number,
+                required: true
+            },
+            date: {
+                type: Date,
+                required: true,
+                default: Date.now
+            }
+        }
+    ]
 }, { timestamps: true });
 
 const Student = mongoose.model('Student', studentSchema);
